@@ -1,3 +1,5 @@
 
 # upload scripts
 *.zsh
+
+.DS_Store
