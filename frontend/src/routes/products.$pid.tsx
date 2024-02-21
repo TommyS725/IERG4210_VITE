@@ -20,15 +20,12 @@ export const Route = createFileRoute("/products/$pid")({
 function ProductPage() {
   const navigate = useNavigate({ from: "/products/$pid" });
   const { pid } = Route.useParams();
-  const {data:product,isLoading,isError} = useSingleProductQuery(pid);
-  if(isLoading){
-    return <p>Loading...</p>
-  }
-  if (!product) {
+  const { data: product, isLoading, isError } = useSingleProductQuery(pid);
+
+  if (!product && !isLoading && !isError) {
     navigate({ to: "/", replace: true });
     return;
   }
-
 
   return (
     <>
@@ -37,25 +34,31 @@ function ProductPage() {
           <CategoryMenu />
         </section>
         <section className="  overflow-y-auto max-h-[110vh]  grow ">
-          <ProductNav product={product}  />
-          <ProductDescription product={product} />
+          {!!product && (
+            <>
+              <ProductNav product={product} />
+              <ProductDescription product={product} />
+            </>
+          )}
         </section>
       </main>
     </>
   );
 }
 
-
-
 type ProductNavProps = {
   product: Product;
 };
 
-function ProductNav({ product}: ProductNavProps) {
+function ProductNav({ product }: ProductNavProps) {
   const { name, cid } = product;
-  const {data:category,isLoading,isError} = useSingleCategoryQuery(product.cid);
-  if(isLoading||!category){
-    return <NavBar navItems={[{ name: "Home", path: "/" }]} />
+  const {
+    data: category,
+    isLoading,
+    isError,
+  } = useSingleCategoryQuery(product.cid);
+  if (isLoading || !category) {
+    return <NavBar navItems={[{ name: "Home", path: "/" }]} />;
   }
   return (
     <NavBar
@@ -76,14 +79,10 @@ const ProductDescription: FC<ProductEntryProps> = ({ product }) => {
   const remainFew = product.inventory <= INVEENTORY_LOW;
   useEditTitle([product.name]);
 
-
   return (
     <section className=" grid grid-cols-1 md:grid-cols-2 mt-4 mb-1 mr-6 gap-4">
       <div className=" flex justify-center">
-        <FullImage
-          filename={product.image}
-          alt={product.name}
-        />
+        <FullImage filename={product.image} alt={product.name} />
       </div>
       <div className=" space-y-4">
         <h1 className=" text-xl font-semibold">{product.name}</h1>
@@ -116,5 +115,3 @@ const ProductDescription: FC<ProductEntryProps> = ({ product }) => {
     </section>
   );
 };
-
-

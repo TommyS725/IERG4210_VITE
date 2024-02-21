@@ -16,7 +16,7 @@ const AddToCart: FC<AddToCartProps> = ({ product, text = "full" }) => {
   const handleAdd = () => {
     const quantityNow = item?.quantity ?? 0;
     const newQuantity = quantityNow + 1;
-    if (newQuantity > product.remaining) {
+    if (newQuantity > product.inventory) {
       window.alert("Not enough stock!");
       return;
     }

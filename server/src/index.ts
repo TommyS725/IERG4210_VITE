@@ -24,8 +24,7 @@ app.basePath(`/api/${API_VERSION}`)
 app.basePath(`/api/${API_VERSION}`)
 .route('/products', products)
 
-//serve images
-app.use('/images/*', serveStatic({ root: './' }))
+
   
 //serve thumbnails
 app.get('/thumbnails/:filename',  (c) => {
