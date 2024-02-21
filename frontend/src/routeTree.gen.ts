@@ -5,7 +5,6 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as ProductsPidImport } from './routes/products.$pid'
-import { Route as CategoriesCkeyImport } from './routes/categories.$ckey'
 
 // Create/Update Routes
 
@@ -19,21 +18,12 @@ const ProductsPidRoute = ProductsPidImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CategoriesCkeyRoute = CategoriesCkeyImport.update({
-  path: '/categories/$ckey',
-  getParentRoute: () => rootRoute,
-} as any)
-
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/categories/$ckey': {
-      preLoaderRoute: typeof CategoriesCkeyImport
       parentRoute: typeof rootRoute
     }
     '/products/$pid': {
@@ -45,8 +35,4 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([
-  IndexRoute,
-  CategoriesCkeyRoute,
-  ProductsPidRoute,
-])
+export const routeTree = rootRoute.addChildren([IndexRoute, ProductsPidRoute])

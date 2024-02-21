@@ -1,5 +1,9 @@
 
 # upload scripts
 *.zsh
+*.sh
+
+# env
+.env
 
 .DS_Store

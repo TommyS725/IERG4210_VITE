@@ -7,7 +7,7 @@ import './index.css'
 import { routeTree } from './routeTree.gen'
 import {  ShoppingCartContextProvider } from './context/ShoppingCartContext'
 
-import { dummy_cart} from './utils/dummy'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 
 
@@ -21,15 +21,26 @@ declare module '@tanstack/react-router' {
   }
 }
 
+//react query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 , //prevent  refetching immediately
+    },
+  },
+})
+
 // Render the app
 const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
-      <ShoppingCartContextProvider initialCart={dummy_cart}>
+      <QueryClientProvider client={queryClient}>
+      <ShoppingCartContextProvider >
         <RouterProvider router={router} />
       </ShoppingCartContextProvider>
+      </QueryClientProvider>
     </StrictMode>,
   )
 }

@@ -1,13 +1,17 @@
-import { CategoryKey} from "./category"
+import {z} from "zod"
 
-export type Product = {
-    pid: number;
-    pname: string;
-    price: number;
-    image: string;
-    description: string;
-    category:CategoryKey;
-    remaining:number;
-}
+export const productSchema = z.object({
+    pid: z.number(),
+    name: z.string(),
+    price: z.number(),
+    image: z.string(),
+    description: z.string(),
+    cid:z.string(),
+    inventory:z.number()
+})
+
+export const productArraySchema = z.array(productSchema)
+
+export type Product = z.infer<typeof productSchema>
 
 

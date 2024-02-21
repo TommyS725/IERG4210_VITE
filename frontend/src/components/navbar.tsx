@@ -17,7 +17,7 @@ const NavBar:FC<NavBarProps> = ({navItems}) => {
         <nav className="flex flex-row gap-2 mx-4  mt-2  text-gray-500">
             {navItems.map((item,index)=>(
                 <span key={index}>
-                    <Link to={item.path} className="[&.active]:font-bold [&.active]:text-gray-800 hover:font-black hover:underline hover:text-black ">
+                    <Link to={item.path}  className="[&.active]:font-bold [&.active]:text-gray-800 hover:font-black hover:underline hover:text-black ">
                         {item.name}
                     </Link>
                     {

@@ -10,9 +10,14 @@ export default defineConfig({
     TanStackRouterVite(),
   ],
   server: {
-    port: 3000
+    port: 3000,
+    proxy: {
+      "/images": "http://localhost:8080/",
+      "/api":"http://localhost:8080/",
+    },
   },
   preview: {
     port: 3000
-  }
+  },
+  
 })
