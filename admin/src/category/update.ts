@@ -4,6 +4,7 @@ import { setHeader } from "../header";
 import { setUpSidebar } from "../sidbar";
 import { setUpFromRequest } from "../request";
 import { ConnectionConfig } from "../connection_config";
+import { setUpCategoryList } from "../category-list";
 
 
 
@@ -24,6 +25,7 @@ const fn = (formData: FormData,token:string) => {
 main();
 
 function main() {
+    setUpCategoryList();
     setHeader();
     setUpSidebar("category");
     setUpFromRequest(fn);

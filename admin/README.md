@@ -34,4 +34,11 @@ Default auth set in server:
 - username: `admin`
 - pw: `admin`
 
+### Possible Issues
+Since the category list automatically populate from DB,  
+please check the host set in header bar and server connection when encountering error from loading or any other requests.
+
+### Dependences
+- API Server
+
 

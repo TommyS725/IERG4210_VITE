@@ -35,3 +35,7 @@ npm run dev:iamges
 ```
 Images will be serve at `localhost:8888/images`
 
+
+
+### Dependences
+- Database

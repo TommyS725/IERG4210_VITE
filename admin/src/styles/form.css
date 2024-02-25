@@ -48,10 +48,3 @@ input:focus, textarea:focus {
 }
 
 
-input.dollar{
-   width: 80%;
-}
-
-input.dollar:hover{
-    width: 85%;
-}

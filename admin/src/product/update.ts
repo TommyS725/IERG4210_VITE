@@ -6,6 +6,7 @@ import { setUpFromRequest } from "../request";
 import { ConnectionConfig } from "../connection_config";
 import {setUpDropImage,fileError} from "../drop-image"
 import { $ } from "../utils";
+import { setUpCategoryList } from "../category-list";
 
 // const $ = document.getElementById.bind(document);
 
@@ -68,8 +69,8 @@ const preCheck = (form:HTMLFormElement) => {
 main();
 
 function main() {
+    setUpCategoryList();
     setHeader();
-    // setUpSidebar("product");
     setUpSidebar("product")
     setUpFromRequest(fn,{preCheck});
     setUpDropImage();

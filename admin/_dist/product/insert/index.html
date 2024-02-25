@@ -5,12 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin - Add Product</title>
-    <script type="module" crossorigin src="/assets/product_insert-DLcbH5DU.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/card-DWmZmNP_.js">
-    <link rel="modulepreload" crossorigin href="/assets/request-D_s7Agun.js">
-    <link rel="modulepreload" crossorigin href="/assets/drop-image-C9E35AKn.js">
-    <link rel="stylesheet" crossorigin href="/assets/card-CJuDm1YL.css">
-    <link rel="stylesheet" crossorigin href="/assets/request-agaBKWjV.css">
+    <script type="module" crossorigin src="/assets/product_insert-CIRKN-dl.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/card-BdzXmr1G.js">
+    <link rel="modulepreload" crossorigin href="/assets/request-CeQp7b1R.js">
+    <link rel="modulepreload" crossorigin href="/assets/drop-image-sDr8q4tt.js">
+    <link rel="modulepreload" crossorigin href="/assets/category-list-C8gqgDnI.js">
+    <link rel="stylesheet" crossorigin href="/assets/card-CqQA7Imj.css">
+    <link rel="stylesheet" crossorigin href="/assets/request-BUwAV0Iw.css">
     <link rel="stylesheet" crossorigin href="/assets/drop-image-BMqZlWzH.css">
   </head>
   <body class="bg-neutral-200">
@@ -44,14 +45,18 @@
               </div>
               <div>
                 <label for="cid">Category ID (cid)</label>
-                <input
-                  type="text"
+                <select
                   name="cid"
                   required
-                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"
-                  oninvalid="this.setCustomValidity('cid is required and must contain at least one letter.')"
+                  oninvalid="this.setCustomValidity('Category ID is required.')"
                   oninput="this.setCustomValidity('')"
-                />
+                  class="w-[90%] "
+                  id="cid-list"
+                >
+                  <option value="" disabled selected hidden>
+                    Select Category
+                  </option>
+                </select>
               </div>
               <div>
                 <label for="price">Price</label>
@@ -62,7 +67,7 @@
                     placeholder="0.00"
                     class="dollar"
                     type="number"
-                    min="1" 
+                    min="1"
                     step="0.01"
                     required
                     pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$"
@@ -99,12 +104,7 @@
               </div>
 
               <div class="grid gap-6">
-                <label
-                  for="image-input"
-                  id="drop-area"
-                  class="group/image "
-                >
-               
+                <label for="image-input" id="drop-area" class="group/image">
                   <input
                     id="image-input"
                     name="image"
@@ -124,23 +124,17 @@
                     <p class="text-sm">Accept jpg/png/gif max-size:5mb</p>
                   </div>
                   <div class="cover"></div>
-                  
                 </label>
-                <p id="image-error" >Image Required</p>
-                <button type="button" id="rm-image-btn"
-                >
-                  <img
-                      src="/rm-image.svg"
-                      alt="remove image"
-                      class="size-6"
-                  />
+                <p id="image-error">Image Required</p>
+                <button type="button" id="rm-image-btn">
+                  <img src="/rm-image.svg" alt="remove image" class="size-6" />
                   <span>Remove Image</span>
-              </button>
+                </button>
               </div>
-         
+
               <button
                 id="submit-btn"
-                class=" place-self-end mr-4 p-3 text-xl bg-orange-400 rounded-lg text-white font-semibold shadow-xl hover:opacity-50 hover:bg-orange-600 group-[.loading]:bg-neutral-400 group-[.loading]:cursor-wait"
+                class="place-self-end mr-4 p-3 text-xl bg-orange-400 rounded-lg text-white font-semibold shadow-xl hover:opacity-50 hover:bg-orange-600 group-[.loading]:bg-neutral-400 group-[.loading]:cursor-wait"
               >
                 <span class="inline group-[.loading]:text-neutral-200"
                   >Submit</span

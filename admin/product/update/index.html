@@ -47,13 +47,16 @@
               </div>
               <div>
                 <label for="cid">Category ID (cid)</label>
-                <input
-                  type="text"
+                <select
                   name="cid"
-                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"
-                  oninvalid="this.setCustomValidity('cid  must contain at least one letter.')"
+                  required
+                  oninvalid="this.setCustomValidity('Category ID is required.')"
                   oninput="this.setCustomValidity('')"
-                />
+                  class=" w-[90%]"
+                  id = "cid-list"
+                >
+                  <option value="" disabled selected hidden>Select Category</option>
+              </select>
               </div>
               <div>
                 <label for="price">Price</label>

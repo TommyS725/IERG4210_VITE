@@ -1,1 +1,0 @@
-import{s as r,C as s}from"./card-DWmZmNP_.js";import{s as i,a as d}from"./request-D_s7Agun.js";const c=(t,o)=>{const e=t.get("pid");if(e===null)return Promise.reject("pid not found");const n=s.getAPI(`products/${e}`);return fetch(n,{method:"DELETE",body:t,headers:{Authorization:`Basic ${o}`}})};u();function u(){r(),i("product"),d(c)}

@@ -22,16 +22,18 @@
           <hr class="border-t-4 mt-3 mb-4 border-black" />
           <div class="mx-[10%] space-y-4">
             <form id="request-form" class="card group grid gap-8 ">
-              <div >
+              <div>
                 <label for="cid">Category ID (cid)</label>
-                <input
-                  type="text"
+                <select
                   name="cid"
                   required
-                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"  
-                  oninvalid="this.setCustomValidity('cid is required and must contain at least one letter.')"
+                  oninvalid="this.setCustomValidity('Category ID is required.')"
                   oninput="this.setCustomValidity('')"
-                />
+                  class=" w-[90%]"
+                  id = "cid-list"
+                >
+                  <option value="" disabled selected hidden>Select Category</option>
+              </select>
               </div>
               <div >
                 <label for="name">Updated Category Name</label>

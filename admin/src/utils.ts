@@ -5,3 +5,9 @@ export function capitalize(str: string): string {
 }
 
 export const $ = document.getElementById.bind(document);
+
+
+export type Category ={
+    name: string;
+    cid: string;
+}

@@ -1,1 +1,0 @@
-import{s,C as r}from"./card-DWmZmNP_.js";import{s as a,a as n}from"./request-D_s7Agun.js";const i=(t,e)=>{const o=r.getAPI("categories");return fetch(o,{method:"post",body:t,headers:{Authorization:`Basic ${e}`}})};c();function c(){s(),a("category"),n(i)}

@@ -1,0 +1,1 @@
+import{s as r,C as i}from"./card-BdzXmr1G.js";import{s as n,a}from"./request-CeQp7b1R.js";import{s as c}from"./category-list-C8gqgDnI.js";const d=(t,o)=>{const e=t.get("cid");if(e===null)return Promise.reject("cid not found");const s=i.getAPI(`categories/${e}`);return fetch(s,{method:"PUT",body:t,headers:{Authorization:`Basic ${o}`}})};m();function m(){c(),r(),n("category"),a(d)}
