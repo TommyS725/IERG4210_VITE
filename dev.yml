@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  images:
+    image: nginx:latest
+    ports:
+      - 8888:80
+    volumes:
+      - ./server/images:/usr/share/nginx/html
+    restart: on-failure
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: store
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: on-failure
+

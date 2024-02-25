@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - Update Product</title>
+  </head>
+  <body class="bg-neutral-200">
+    <header id="header"></header>
+    <main class="flex flex-row gap-4 text-slate-800">
+      <nav id="side-bar"></nav>
+      <section class="flex-grow mx-auto grid gap-4 mt-8 mr-8 self-start">
+        <div>
+          <div class="ml-2 items-center flex flex-warp gap-3">
+            <a
+              href="/"
+              class="text-2xl text-neutral-600 font-semibold hover:underline"
+              >Home</a
+            >
+            <span class="text-4xl text-neutral-900 font-medium"> > </span>
+            <span class="text-3xl font-semibold">Update Existing Product</span>
+          </div>
+          <hr class="border-t-4 mt-3 mb-4 border-black" />
+          <div class="mx-[10%] space-y-4">
+            <form id="request-form" class="card group grid gap-8">
+              <div >
+                <label for="pid">Product ID (pid)</label>
+                <input
+                  type="text"
+                  name="pid"
+                  required
+                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"  
+                  oninvalid="this.setCustomValidity('pid is required and must contain at least one letter.')"
+                  oninput="this.setCustomValidity('')"
+                />
+              </div>
+              <div>
+                <label for="name">Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"
+                  oninvalid="this.setCustomValidity('Product name must contain at least one letter.')"
+                  oninput="this.setCustomValidity('')"
+                />
+              </div>
+              <div>
+                <label for="cid">Category ID (cid)</label>
+                <input
+                  type="text"
+                  name="cid"
+                  pattern="^(?=.*[a-zA-Z])[^\n\t]+$"
+                  oninvalid="this.setCustomValidity('cid  must contain at least one letter.')"
+                  oninput="this.setCustomValidity('')"
+                />
+              </div>
+              <div>
+                <label for="price">Price</label>
+                <div>
+                  <span class="text-lg font-semibold">$</span>
+                  <input
+                  name="price"
+                  placeholder="0.00"
+                  class="dollar"
+                  type="number"
+                  min="1" 
+                  step="0.01"
+                  pattern="^(0*[1-9][0-9]*(\.[0-9]+)?|0+\.[0-9]*[1-9][0-9]*)$"
+                  oninvalid="this.setCustomValidity('Price is required, >0 and can only contain numbers and at most two decimal places.')"
+                  oninput="this.setCustomValidity('')"
+                />
+                </div>
+              </div>
+              <div>
+                <label for="description">Description</label>
+                <textarea
+                  name="description"
+                  placeholder="This product is..."
+                  rows="1"
+                  onfocus="this.rows='8'"
+                  onblur="this.rows='1'"
+                  oninvalid="this.setCustomValidity('Product description must contain at least one letter.')"
+                  oninput="this.setCustomValidity('')"
+                ></textarea>
+              </div>
+              <div>
+                <label for="inventory">Inventory</label>
+                <input
+                  name="inventory"
+                  type="number"
+                  placeholder="0"
+                  min="0"
+                  pattern="^(?=.*[0-9])([0-9]*)$"
+                  oninvalid="this.setCustomValidity('Inventory can only contain integers.')"
+                  oninput="this.setCustomValidity('')"
+                />
+              </div>
+
+              <div class="grid gap-6">
+                <label
+                  for="image-input"
+                  id="drop-area"
+                  class="group/image "
+                >
+               
+                  <input
+                    id="image-input"
+                    name="image"
+                    type="file"
+                    accept="image/jpg, image/jpeg, image/png"
+                    hidden
+                  />
+                  <div
+                    class="grid justify-center group-[.uploaded]/image:invisible"
+                  >
+                    <img
+                      src="/upload.svg"
+                      alt="upload image"
+                      class="size-32 block justify-self-center group-hover/image:animate-bounce"
+                    />
+                    <p>Drag and drop or click to upload image</p>
+                    <p class="text-sm">Accept jpg/png/gif max-size:5mb</p>
+                  </div>
+                  <div class="cover"></div>
+                  
+                </label>
+                <p id="image-error" >Image Required</p>
+                <button type="button" id="rm-image-btn"
+                >
+                  <img
+                      src="/rm-image.svg"
+                      alt="remove image"
+                      class="size-6"
+                  />
+                  <span>Remove Image</span>
+              </button>
+              </div>
+         
+              <button
+                id="submit-btn"
+                class=" place-self-end mr-4 p-3 text-xl bg-orange-400 rounded-lg text-white font-semibold shadow-xl hover:opacity-50 hover:bg-orange-600 group-[.loading]:bg-neutral-400 group-[.loading]:cursor-wait"
+              >
+                <span class="inline group-[.loading]:text-neutral-200"
+                  >Submit</span
+                >
+              </button>
+            </form>
+            <div id="status-card"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/src/product/update.ts"></script>
+  </body>
+</html>

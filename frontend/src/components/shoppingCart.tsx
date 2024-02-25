@@ -51,13 +51,13 @@ const ShoppingList: FC = () => {
       event.target.value = item.quantity.toString();
       return;
     }
-    if (newQuantity > item.remaining) {
-      window.alert(`Not enough stock for ${item.pname}!`);
+    if (newQuantity > item.inventory) {
+      window.alert(`Not enough stock for ${item.name}!`);
       event.target.value = item.quantity.toString();
       return;
     }
     if (newQuantity < 0) {
-      window.alert(`Invalid quantity for ${item.pname}!`);
+      window.alert(`Invalid quantity for ${item.name}!`);
       event.target.value = item.quantity.toString();
       return;
     }
@@ -112,7 +112,7 @@ const ShoppingList: FC = () => {
                       {index + 1}.{"\u00a0\u00a0"}
                     </span>
                     <div className="grow grid grid-cols-3 gap-2">
-                      <span>{item.pname}</span>
+                      <span>{item.name}</span>
                       <input
                         inputMode="numeric"
                         type="number"

@@ -1,17 +1,34 @@
 # Use Node.js as the base image
-FROM node:20
+FROM node:20 as build
 
 # Set the working directory
-WORKDIR /usr/src/app
+WORKDIR /app
+
+# Set the environment variables
+ARG DB_URL=mysql://root:admin@localhost:3306/store
+ENV DB_URL=$DB_URL
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --production
 
 # Bundle app source
 COPY . .
 
+# Generate the build of the application
+RUN npm run build
+
+
+
+FROM node:latest as production
+
+WORKDIR /app
+
+# Copy the build from the previous stage
+COPY --from=build /app /app
+
+
 # Your app binds to port 8080 so you'll use the EXPOSE instruction to have it mapped by the docker daemon
 EXPOSE 8080
 
-CMD [ "node", "dist/src/index.js" ]
+CMD [ "npm", "run","setup:start" ]

@@ -1,7 +1,7 @@
 import {z} from "zod"
 
 export const productSchema = z.object({
-    pid: z.number(),
+    pid: z.string(),
     name: z.string(),
     price: z.number(),
     image: z.string(),

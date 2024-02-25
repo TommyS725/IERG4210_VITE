@@ -1,18 +1,13 @@
-import {
-  Link,
-  createFileRoute,
-  useNavigate,
-} from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import NavBar from "../components/navbar";
 import CategoryMenu from "../components/categoryMenu";
 import { Product } from "../models/products";
-import {  useEditTitle } from "../utils/title";
+import { useEditTitle } from "../utils/title";
 import AddToCart from "../components/addToCart";
 import { Thumbnail } from "../components/images";
 import { z } from "zod";
 import { useProductsQuery } from "../services/getProducts";
 import { useSingleCategoryQuery } from "../services/getSingleCategory";
-
 
 const searchSchema = z.object({
   cid: z.string().optional(),
@@ -20,12 +15,10 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/")({
   component: Index,
-  validateSearch:(search) => searchSchema.parse(search),
+  validateSearch: (search) => searchSchema.parse(search),
 });
 
 function Index() {
-
-
   return (
     <>
       <MainSection />
@@ -38,10 +31,7 @@ type ProductEntryProps = {
   navigate: (opts: { to: string; params: (prev: any) => any }) => void;
 };
 
-function ProductEntry({
-  product,
-  navigate,
-}: ProductEntryProps) {
+function ProductEntry({ product, navigate }: ProductEntryProps) {
   const to = "/products/$pid";
   const params = (prev: any) => ({ ...prev, pid: String(product.pid) });
 
@@ -61,7 +51,7 @@ function ProductEntry({
           {product.name}
         </Link>
       </div>
-      <div className=" mt-2 justify-end grid grid-cols-2 items-center">
+      <div className=" mt-2 justify-end grid grid-cols-2 gap-1 items-center">
         <p className=" text-base font-medium text-gray-900">
           ${product.price.toFixed(2)}
         </p>
@@ -71,26 +61,35 @@ function ProductEntry({
   );
 }
 
-
 type NavWithCidProps = {
   cid: string;
+  navigate: (opts: { to: string; params: (prev: any) => any }) => void;
 };
 
 function NavWithCid({ cid }: NavWithCidProps) {
-  const navItems = [{ name: "Home", path: "/" }]
-  const {data:category} = useSingleCategoryQuery(cid);
-  if(!category){
-    return <NavBar navItems={navItems} />
+  const baseNav = { name: "Home", path: "/" };
+  const { data: category } = useSingleCategoryQuery(cid);
+  if (!category) {
+    return <NavBar navItems={[baseNav]} />;
   }
-  return <NavBar navItems={[...navItems,{name:category.name,path:`/?cid=${cid}`}]} />
+  return (
+    <NavBar
+      navItems={[
+        {
+          ...baseNav,
+          active: false,
+        },
+        { name: category.name, path: `/?cid=${cid}`, active: true },
+      ]}
+    />
+  );
 }
 
 function MainSection() {
-  const {cid} = Route.useSearch();
+  const { cid } = Route.useSearch();
   const navigate = useNavigate({ from: "/" });
   useEditTitle(["Home"]);
-  const {data:products,isLoading,isError} = useProductsQuery(cid);
-
+  const { data: products } = useProductsQuery(cid);
 
   return (
     <>
@@ -99,9 +98,11 @@ function MainSection() {
           <CategoryMenu cid={cid} />
         </section>
         <section className="  overflow-y-auto max-h-[110vh]  grow ">
-          {
-            cid?<NavWithCid cid={cid} />:<NavBar navItems={[{ name: "Home", path: "/" }]} />
-          }
+          {cid ? (
+            <NavWithCid cid={cid} navigate={navigate}/>
+          ) : (
+            <NavBar navItems={[{ name: "Home", path: "/" }]} />
+          )}
           <section className=" gap-12  flex flex-wrap  justify-around">
             {products?.map((product, index) => {
               return (

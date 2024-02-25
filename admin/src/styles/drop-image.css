@@ -1,0 +1,79 @@
+#drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  font-size: 20px;
+  color: #ccc;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  grid-column: 1;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+#drop-area:hover {
+  border-color: #444444;
+  transition: border-color 300ms;
+}
+
+#drop-area .cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.3;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+#drop-area.uploaded {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  padding: 10 10 10 10;
+}
+
+#drop-area .cover:hover {
+  background: gray;
+}
+
+#rm-image-btn {
+  display: none;
+}
+
+#rm-image-btn.uploaded {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: medium;
+  font-weight: bold;
+  color: #ff3636;
+  padding: 8px 8px 8px 8px;
+  margin-top: -10px;
+  place-self: start;
+  border-radius: 10px;
+}
+
+
+#rm-image-btn:hover {
+   background: rgb(209, 209, 209);
+   opacity: 0.5;
+}
+
+#image-error{
+    color:#ff3636;
+    margin-top: -10px;
+    margin-left: 2%;
+    display: none;
+}
+
+#image-error.active{
+    display: block;
+}

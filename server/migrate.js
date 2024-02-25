@@ -10,17 +10,26 @@ if (!DB_URL) {
   throw new Error("DB_URI is not set, please set it in .env file.");
 }
 
+async function runMigration() {
+  const connection = await createConnection({
+      uri: DB_URL,
+  });
 
-const connection = await createConnection({
-    uri: DB_URL,
-});
+  const db = drizzle(connection);
+  try {
+    await migrate(db, { migrationsFolder: "./drizzle" });
+  } catch (error) {
+    if (error.code === "ER_TABLE_EXISTS_ERROR") {
+      console.log("Database already migrated");
+    } else {
+      throw error;
+    }
+  }
 
-const db = drizzle(connection);
 
+  await connection.end();
 
-await migrate(db, { migrationsFolder: "drizzle" });
+  console.log("Migration complete");
+}
 
-
-await connection.end();
-
-console.log("Migration complete");
+runMigration();

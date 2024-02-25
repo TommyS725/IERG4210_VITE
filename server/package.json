@@ -9,7 +9,10 @@
     "db:generate": "drizzle-kit generate:mysql",
     "db:drop": "drizzle-kit drop",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "node migrate.js"
+    "db:migrate": "node migrate.js",
+    "setup:start": "npm run db:migrate && npm run start",
+    "dev:images": "browser-sync start --config bs-config.cjs",
+    "dev:server": "concurrently -k  -n Dev-API,Images \"npm run dev\" \"npm run dev:images\""
   },
   "dependencies": {
     "@hono/node-server": "^1.7.0",
@@ -24,6 +27,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
+    "browser-sync": "^3.0.2",
+    "concurrently": "^8.2.2",
     "drizzle-kit": "^0.20.14",
     "tsx": "^3.12.2"
   }

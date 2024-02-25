@@ -1,11 +1,10 @@
 import { serve } from '@hono/node-server'
-import { serveStatic } from '@hono/node-server/serve-static'
 import { Hono } from 'hono'
 import { logger } from 'hono/logger';
+import { cors } from 'hono/cors';
 import fs from 'fs';
 import categories from './routes/categories.js';
 import products from './routes/products.js';
-import { adminAuth } from './auth.js';
 
 const port  = 8080 as const 
 
@@ -16,6 +15,9 @@ const app= new Hono()
 //logging
 app.use(logger())
 
+// cors
+app.use(cors())
+
 // categories
 app.basePath(`/api/${API_VERSION}`)
 .route('/categories', categories,)
@@ -24,7 +26,8 @@ app.basePath(`/api/${API_VERSION}`)
 app.basePath(`/api/${API_VERSION}`)
 .route('/products', products)
 
-
+//serve static files
+// app.get('/images/*', serveStatic({root:"./"}))
   
 //serve thumbnails
 app.get('/thumbnails/:filename',  (c) => {

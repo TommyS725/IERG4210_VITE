@@ -1,24 +1,24 @@
-import { useQuery } from "react-query";
-import { request } from "./core";
+import {  request } from "./core";
 import { categorySchema } from "../models/category";
+import { queryOptions, useQuery } from "@tanstack/react-query";
+
+const baseQueryKey = ["category"];
+
+const queryFn = (cid: string) => request({
+  path: `categories/${cid}`,
+  schema: categorySchema,
+});
 
 
-const baseQueryKey = ['category'] 
+export const singleCategoryQueryOptions = (cid: string) => queryOptions({
+  queryKey: [...baseQueryKey, cid],
+  queryFn: () => queryFn(cid),
+});
 
 
-export function useSingleCategoryQuery(cid:string) {
-   if(!cid){
-    console.error('useSingleCategoryQuery: cid is required');
-   }
-  const queryKey = [...baseQueryKey, cid];
-  return useQuery(
-    queryKey,
-    async ()=>{
-        const data = await request({
-            path: `categories/${cid}`,
-        });
-        // console.log(data);
-        return categorySchema.parse(data);
-    }
-  )
+
+export function useSingleCategoryQuery(cid: string) {
+
+  const option = singleCategoryQueryOptions(cid);
+  return useQuery(option);
 }

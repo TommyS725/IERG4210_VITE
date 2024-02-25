@@ -1,20 +1,21 @@
-import { useQuery } from "react-query";
 import { request } from "./core";
 
 import { categoryArraySchema } from "../models/category";
+import { useQuery,queryOptions } from "@tanstack/react-query"
 
-export const queryKey = "categories" as const;
+export const queryKey = ["categories" ] as const;
+const queryFn = () => request({
+  path: "categories",
+  schema: categoryArraySchema,
+});
+
+export const allCategoriesQueryOptions = queryOptions({
+  queryKey,
+  queryFn,
+});
+
 
 export const getAllCategories = () => {
-  return useQuery(
-    queryKey, 
-    async () => {
-        const data = await request({
-            path: "categories",
-        });
-        // console.log(data);
-        return categoryArraySchema.parse(data);
-    },
-    );
-
+  const option = allCategoriesQueryOptions;
+  return useQuery(option);
 };

@@ -1,0 +1,20 @@
+
+.auth-unset {
+    color: red;
+}
+  
+.auth-set {
+color: green;
+}
+
+.host-unset {
+    color: grey;
+    font-size: medium;
+}
+
+
+.host-set {
+    color: white;
+    font-size:large;
+}
+

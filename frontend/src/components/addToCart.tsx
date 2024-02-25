@@ -57,11 +57,13 @@ const AddToCart: FC<AddToCartProps> = ({ product, text = "full" }) => {
 // not in cart
 if(text==="short")
     return <button
-    className=" flex gap-1 py-1 pl-1 border-2 border-gray-700 rounded-2xl  hover:ring-1 ring-gray-700 hover:bg-blue-200 "
+    className=" flex justify-center border-2 border-gray-700 rounded-full md:rounded-2xl   hover:ring-1 ring-gray-700 hover:bg-blue-200 "
     onClick={handleAdd}
   >
-    <Plus />
-    {"Add"}
+    <div className=" md:py-1  flex gap-1">
+    <Plus className= " md:-ml-1" />
+    <span className="  md:inline-block hidden">{"Add"}</span>
+    </div>
   </button>
 
 // text = full

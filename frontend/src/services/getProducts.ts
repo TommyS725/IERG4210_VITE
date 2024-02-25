@@ -1,21 +1,24 @@
-import { useQuery } from "react-query";
 import { request } from "./core";
 import { productArraySchema } from "../models/products";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 
+const baseQueryKey = ["products"];
 
-const baseQueryKey = ['products'];
+const queryFn = (cid?: string) => request({
+  path: "products",
+  params: { cid },
+  schema: productArraySchema,
+});
 
-
-export function useProductsQuery(cid?:string) {
+export const allProductsQueryOptions = (cid?: string) => {
   const queryKey = cid ? [...baseQueryKey, cid] : baseQueryKey;
-  return useQuery(
+  return queryOptions({
     queryKey,
-    async ()=>{
-        const data = await request({
-            path: "products",
-            params: {cid},
-        });
-        return productArraySchema.parse(data);
-    }
-  )
+    queryFn: () => queryFn(cid),
+  });
+}
+
+export function useProductsQuery(cid?: string) {
+  const option = allProductsQueryOptions(cid);
+  return useQuery(option);
 }

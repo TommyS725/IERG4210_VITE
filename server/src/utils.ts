@@ -13,6 +13,11 @@ export const  validationCallBack = {
         if(!result.success){
             return c.text("Invalid form data", 400)
         }
+    },
+    "query":(result:R,c:C)=>{
+        if(!result.success){
+            return c.text("Invalid query data", 400)
+        }
     }
 } as const
 
@@ -25,7 +30,7 @@ export function saveImage(image:File,filename:string){
         try {
            await  writeFile(filepath,Buffer.from(buffer))
         } catch (error) {
-            console.error(`Unable to save image, name of image: ${image.name}`)
+            console.log(`Unable to save image, name of image: ${image.name}`)
             reject(error)
         }
         resolve()
@@ -39,9 +44,30 @@ export function deleteFile(filename:string){
         try {
             unlink(filepath)
         } catch (error) {
-            console.error(`Unable to delete image, name of image: ${filename}`)
+            console.log(`Unable to delete image, name of image: ${filename}`)
             reject(error)
         }
         resolve()
     })
+}
+
+
+export function renameFile(oldName:string,newName:string){
+    return new Promise<string>((resolve,reject)=>{
+        const oldPath = `./images/${oldName}`
+        const newPath = `./images/${newName}`
+        try {
+            unlink(oldPath)
+            writeFile(newPath,"")
+        } catch (error) {
+            console.log(`Unable to rename image, name of image: ${oldName}`)
+            reject(error)
+        }
+        resolve(newName)
+    })
+}
+
+export const roundNumber = (num:number,decimalPlaces:number):number=>{
+    const factor = 10**decimalPlaces
+    return Math.round(num*factor)/factor
 }

@@ -8,8 +8,8 @@ type ShoppingCartContextType = {
     cart: CartItem[];
     totalAmount: number;
     addItem: (product: Product, quantity: number) => void;
-    removeItem: (pid: number) => void;
-    updateItem: (pid: number, quantity: number) => void;
+    removeItem: (pid: string) => void;
+    updateItem: (pid: string, quantity: number) => void;
     clearCart: () => void;
     setCart: Dispatch<React.SetStateAction<CartItem[]>>;
 };
@@ -41,12 +41,12 @@ export function ShoppingCartContextProvider({ children, initialCart = [] }: Shop
         }
     };
 
-    const removeItem = (pid: number) => {
+    const removeItem = (pid: string) => {
         const newCart = cart.filter((item) => item.pid !== pid);
         setCart(newCart);
     };
 
-    const updateItem = (pid: number, quantity: number) => {
+    const updateItem = (pid: string, quantity: number) => {
         const index = cart.findIndex((item) => item.pid === pid);
         const newCart = [...cart];
         newCart[index].quantity = quantity;
