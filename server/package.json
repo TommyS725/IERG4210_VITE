@@ -15,6 +15,7 @@
     "dev:server": "concurrently -k  -n Dev-API,Images \"npm run dev\" \"npm run dev:images\""
   },
   "dependencies": {
+    "@types/node": "^20.11.17",
     "@hono/node-server": "^1.7.0",
     "@hono/zod-validator": "^0.1.11",
     "dotenv": "^16.4.4",
@@ -26,7 +27,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^20.11.17",
     "browser-sync": "^3.0.2",
     "concurrently": "^8.2.2",
     "drizzle-kit": "^0.20.14",

@@ -14,19 +14,31 @@ npm i
 ```sh
 npm run dev
 ```
-or
-```sh
-npm run build
-npm run preview
-```
+
 3. The fronted client will be availabe at <localhost:3000>
 ### Production
-1. Create production build
+#### Using NodeJS
+Create production build
 ```sh
+npm i
 npm run build
+```
+##### Using preview server
+```sh
 npm run preview
 ```
-2.  Serve the static contents at `./dist/` using applications like `nginx`.
+The admin panel will be availabe at <localhost:3001>
+##### Serve static contents
+Serve the static contents at `./_dist/` using applications like `nginx`.
+
+#### Using Docker container
+Build and run a Docker container in this directory by running
+```sh
+docker build -t {image-name}.
+docker run --name {container-name} -p {port}:80 {imaage-name}
+```
+Replace {image-name}, {port} and {container-name} with the actual value.
+The admin panel will be availabe at <localhost:{port}>
 
 ### Features
 

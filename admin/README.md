@@ -17,13 +17,28 @@ npm run dev
 
 3. The admin panel will be availabe at <localhost:3001>
 ### Production
-- Create production build
+#### Using NodeJS
+Create production build
 ```sh
+npm i
 npm run build
+```
+##### Using preview server
+```sh
 npm run preview
 ```
 The admin panel will be availabe at <localhost:3001>
--  Serve the static contents at `./_dist/` using applications like `nginx`.
+##### Serve static contents
+Serve the static contents at `./_dist/` using applications like `nginx`.
+
+#### Using Docker container
+Build and run a Docker container in this directory by running
+```sh
+docker build -t {image-name}.
+docker run --name {container-name} -p {port}:80 {imaage-name}
+```
+Replace {image-name}, {port} and {container-name} with the actual value.
+The admin panel will be availabe at <localhost:{port}>
 
 ### Features
 
