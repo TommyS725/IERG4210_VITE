@@ -3,8 +3,7 @@
 *.zsh
 *.sh
 
-# env
-.env
+
 
 backup_scripts
 
