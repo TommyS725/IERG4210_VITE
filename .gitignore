@@ -4,9 +4,13 @@
 *.sh
 
 
-
 backup_scripts
 
 .DS_Store
 
 bun.lockb
+
+# scripting 
+/node_modules
+/package-lock.json
+/package.json

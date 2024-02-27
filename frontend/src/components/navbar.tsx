@@ -14,7 +14,7 @@ type NavBarProps = {
 const NavBar: FC<NavBarProps> = ({ navItems }) => {
   return (
     <>
-      <nav className="flex flex-row gap-2 mx-4  mt-2  text-gray-500">
+      <nav className="flex flex-row gap-2 mx-4  mt-2  text-gray-500 ">
         {navItems.map((item, index) => {
             const activeSet = item.active !== undefined 
             const defaultClass = "[&.active]:font-bold [&.active]:text-gray-800"

@@ -36,22 +36,23 @@ function ProductEntry({ product, navigate }: ProductEntryProps) {
   const params = (prev: any) => ({ ...prev, pid: String(product.pid) });
 
   return (
-    <div className=" min-h-36 ">
+    <div className=" min-h-36 mr-auto   ">
       <Thumbnail
         filename={product.image}
         alt={product.name}
         onClick={() => navigate({ to, params })}
+        className=" m-auto"
       />
       <div className=" m-1 justify-center grid">
         <Link
           to={to}
           params={params}
-          className=" font-semibold text-base hover:underline underline-offset-2 "
+          className="  text-center text-balance font-semibold text-base hover:underline underline-offset-2 "
         >
           {product.name}
         </Link>
       </div>
-      <div className=" mt-2 justify-end grid grid-cols-2 gap-1 items-center">
+      <div className=" min-w-full mt-2 justify-end grid grid-cols-2 gap-1 items-center">
         <p className=" text-base font-medium text-gray-900">
           ${product.price.toFixed(2)}
         </p>
@@ -103,7 +104,8 @@ function MainSection() {
           ) : (
             <NavBar navItems={[{ name: "Home", path: "/" }]} />
           )}
-          <section className=" gap-12  flex flex-wrap  justify-around">
+          <div></div>
+          <section className="  gap-24 flex flex-wrap justify-start ">
             {products?.map((product, index) => {
               return (
                 <ProductEntry

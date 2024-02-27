@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { Product } from "../models/products";
 import { ShoppingCart as CartIcon } from "lucide-react";
@@ -83,8 +84,9 @@ const ShoppingList: FC = () => {
   return (
     <>
       <div
-        className={
-          "p-3 bg-slate-800 text-zinc-300 gap-8 min-w-80 hidden group-hover/scart:block group-hover/scart:absolute top-6 right-3 rounded-md"
+        className={`p-3 bg-slate-800 text-zinc-300 gap-8 min-w-96 shadow-xl
+        hidden group-hover/scart:block group-hover/scart:absolute 
+        top-6 right-3 rounded-md`
         }
       >
         <p className=" font-medium text-center text-white">Shopping List </p>
@@ -107,12 +109,18 @@ const ShoppingList: FC = () => {
             {cart.map((item, index) => {
               return (
                 <li key={item.pid}>
-                  <div className="flex  text-center px-2">
-                    <span>
-                      {index + 1}.{"\u00a0\u00a0"}
-                    </span>
+                  <div className="flex overflow-scroll gap-4 text-center px-2">
+                    <div>
+                      {index + 1}.
+                    </div>
                     <div className="grow grid grid-cols-3 gap-2">
-                      <span>{item.name}</span>
+                      <Link 
+                      className=" text-nowrap overflow-x-auto hover:underline"
+                      to="/products/$pid"
+                      params={{ pid: item.pid }}
+                      >
+                        {item.name}
+                        </Link>
                       <input
                         inputMode="numeric"
                         type="number"

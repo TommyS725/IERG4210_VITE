@@ -5,6 +5,7 @@ import { cors } from 'hono/cors';
 import fs from 'fs';
 import categories from './routes/categories.js';
 import products from './routes/products.js';
+import shoppingList from './routes/shopping-list.js';
 
 const port  = 8080 as const 
 
@@ -18,13 +19,16 @@ app.use(logger())
 // cors
 app.use(cors())
 
+const api = app.basePath(`/api/${API_VERSION}`)
+
 // categories
-app.basePath(`/api/${API_VERSION}`)
-.route('/categories', categories,)
+api.route('/categories', categories,)
 
 //products
-app.basePath(`/api/${API_VERSION}`)
-.route('/products', products)
+api.route('/products', products)
+
+// shoppping list
+api.route('/shopping-list', shoppingList )
 
 //serve static files
 // app.get('/images/*', serveStatic({root:"./"}))
