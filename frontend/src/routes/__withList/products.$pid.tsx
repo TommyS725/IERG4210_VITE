@@ -4,7 +4,7 @@ import NavBar from "../../components/navbar";
 import { useEditTitle } from "../../utils/title";
 import { Product } from "../../models/products";
 import { FC } from "react";
-import AddToCart from "../../components/addToCart";
+import AddToCart from "../../components/shopping-cart/addToCart";
 import { FullImage } from "../../components/images";
 import { useSingleCategoryQuery } from "../../services/getSingleCategory";
 import { singleProductQueryOptions } from "../../services/getSingleProduct";

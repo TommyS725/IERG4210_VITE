@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
-import ShoppingCart from "./shoppingCart";
+import ShoppingCart from "./shopping-cart/shoppingCart";
 
 
 

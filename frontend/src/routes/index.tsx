@@ -3,7 +3,7 @@ import NavBar from "../components/navbar";
 import CategoryMenu from "../components/categoryMenu";
 import { Product } from "../models/products";
 import { useEditTitle } from "../utils/title";
-import AddToCart from "../components/addToCart";
+import AddToCart from "../components/shopping-cart/addToCart";
 import { Thumbnail } from "../components/images";
 import { z } from "zod";
 import { useProductsQuery } from "../services/getProducts";
