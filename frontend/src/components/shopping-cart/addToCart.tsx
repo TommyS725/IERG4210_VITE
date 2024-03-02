@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Minus, Plus } from "lucide-react";
-import { Product } from "../../models/products";
+import { SimplifiedProduct } from "../../models/products";
 import Button from "../Button";
 
 type AddToCartProps = {
-  product: Product;
+  product: SimplifiedProduct,
   text: "full" | "short";
 };
 

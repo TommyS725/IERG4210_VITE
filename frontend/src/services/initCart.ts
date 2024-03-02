@@ -45,6 +45,7 @@ export const initCaertQueryOptions = (storage: CartStorage,onSuccess: CallBack) 
   return queryOptions({
     queryKey: baseQueryKey,
     queryFn: () => queryFn(storage,onSuccess),
+    staleTime:Infinity, //the data is only used for init the cart, so it should not be updated
   });
 };
 

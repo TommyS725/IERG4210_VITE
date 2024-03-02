@@ -15,3 +15,10 @@ export const productArraySchema = z.array(productSchema)
 export type Product = z.infer<typeof productSchema>
 
 
+export const simplifiedProductSchema = productSchema
+.partial({
+    description:true,
+    cid:true
+})
+
+export type SimplifiedProduct = z.infer<typeof simplifiedProductSchema>

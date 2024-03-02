@@ -1,5 +1,5 @@
 import { request } from "./core";
-import { productArraySchema } from "../models/products";
+import { productArraySchema, simplifiedProductSchema } from "../models/products";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 const baseQueryKey = ["products"];
@@ -7,7 +7,7 @@ const baseQueryKey = ["products"];
 const queryFn = (cid?: string) => request({
   path: "products",
   params: { cid },
-  schema: productArraySchema,
+  schema: simplifiedProductSchema.array(),
 });
 
 export const allProductsQueryOptions = (cid?: string) => {

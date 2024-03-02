@@ -1,5 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import {writeFile,unlink} from "fs/promises";
+import { z } from "zod";
 
 
 
@@ -71,3 +72,7 @@ export const roundNumber = (num:number,decimalPlaces:number):number=>{
     const factor = 10**decimalPlaces
     return Math.round(num*factor)/factor
 }
+
+export const paginationSchema = z.object({
+    pageSize:z.string().regex(/^\d+$/).default("10").transform((v)=>parseInt(v)),
+})

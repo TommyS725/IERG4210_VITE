@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import { CartStorage, ShoppingCart, cartStorageSchema } from "../models/cart";
-import { Product } from "../models/products";
+import { Product,SimplifiedProduct } from "../models/products";
 import { useLocalStorage } from "../utils/useLocalStorage";
 import { useInitCartQuery } from "../services/initCart";
 
@@ -23,7 +23,7 @@ export type ShoppingCartContextType = {
   cart: ShoppingCart;
   totalAmount: number;
   roundedTotal: string;
-  addItem: (product: Product, quantity: number) => void;
+  addItem: (product: SimplifiedProduct, quantity: number) => void;
   removeItem: (pid: string) => void;
   updateItem: (pid: string, quantity: number) => void;
   clearCart: () => void;
@@ -52,7 +52,7 @@ export function ShoppingCartContextProvider({
     cartStorageSchema,
     initialStorage
   );
-  const { isError, isLoading} = useInitCartQuery(cartStorage,data=>{
+  const {data, isError, isLoading} = useInitCartQuery(cartStorage,data=>{
     // console.log("data",data);
     setCart(data);
   });
@@ -67,6 +67,14 @@ export function ShoppingCartContextProvider({
     [setCartStorage]
   );
 
+  const updateCart = useCallback(
+    (newCart: ShoppingCart) => {
+      setCart(newCart);
+      saveCartToStorage(newCart);
+    },
+    [setCart, saveCartToStorage]
+  );
+
   const totalAmount = useMemo(() => cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
@@ -76,30 +84,26 @@ export function ShoppingCartContextProvider({
     DIGIT_TO_SHOW
   ), [totalAmount])
 
-  const isReady = !isLoading && !isError 
-  // && data !== undefined;
+  const isReady = !isLoading && !isError && data !== undefined;
 
-  const addItem = (product: Product, quantity: number) => {
+
+  const addItem = (product: SimplifiedProduct, quantity: number) => {
     if (!isReady) return;
     const item = { ...product, quantity };
     const index = cart.findIndex((i) => i.pid === item.pid);
+    let newCart = cart;
     if (index === -1) {
-      const newCart = [...cart, item];
-      setCart(newCart);
-      saveCartToStorage(newCart);
+       newCart = [...cart, item];
     } else {
-      const newCart = [...cart];
       newCart[index].quantity += item.quantity;
-      setCart(newCart);
-      saveCartToStorage(newCart);
     }
+    updateCart(newCart);
   }
 
   const removeItem = (pid: string) => {
     if (!isReady) return;
     const newCart = cart.filter((item) => item.pid !== pid);
-    setCart(newCart);
-    saveCartToStorage(newCart);
+    updateCart(newCart);
   };
 
   const updateItem = (pid: string, quantity: number) => {
@@ -107,14 +111,12 @@ export function ShoppingCartContextProvider({
     const index = cart.findIndex((item) => item.pid === pid);
     const newCart = [...cart];
     newCart[index].quantity = quantity;
-    setCart(newCart);
-    saveCartToStorage(newCart);
+    updateCart(newCart);
   };
 
   const clearCart = () => {
     if (!isReady) return;
-    setCart([]);
-    saveCartToStorage([]);
+    updateCart([]);
   };
 
   return (

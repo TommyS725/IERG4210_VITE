@@ -20,6 +20,7 @@ export const request = async <T>(config: RequestConfig<T>):Promise<T> => {
   const method = config.method || "GET";
   const url = `${API_URL}${config.path}`;
   try {
+    // await new Promise(res=>setTimeout(res,200));
     const response = await axios.request({
         ...config,
         method,

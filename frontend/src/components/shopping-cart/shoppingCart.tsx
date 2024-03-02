@@ -1,5 +1,5 @@
 import { ShoppingCartContextType, useShoppingCart } from "../../context/ShoppingCartContext";
-import { ShoppingCart as CartIcon } from "lucide-react";
+import { ShoppingCart as CartIcon, Loader2 } from "lucide-react";
 import { FC } from "react";
 import ListDetail from "./list-detail";
 import Button from "../Button";
@@ -10,6 +10,7 @@ type ShoppingListProps = {
 
 const ShoppingList: FC<ShoppingListProps> = ({context}) => {
   const { isLoading,cart ,roundedTotal,isReady,clearCart} = context;
+  const showContent =!isLoading && cart.length > 0 
   const checkOut = () => {
     if (isLoading) {
       return
@@ -26,17 +27,21 @@ const ShoppingList: FC<ShoppingListProps> = ({context}) => {
     <>
       <div
         className={`p-3 bg-slate-800 text-zinc-300 gap-8 min-w-96 shadow-xl
-        hidden  group-hover/scart:block group-hover/scart:absolute 
+        hidden group-hover/scart:block group-hover/scart:absolute 
         top-6 right-3 rounded-md`
         }
       >
         <p className=" font-medium text-center text-white">Shopping List </p>
         {/* <p> Ready: {isReady?"yes":"no"}</p> */}
         <hr className=" my-2" />
-        {/* change to loading spinner later */}
-        {isLoading && <p className="text-center text-white">Loading...</p>}
-        {!isLoading && cart.length > 0 && <ListDetail context={context} />}
-        {!isLoading && cart.length === 0 && <div className="text-center">Nothing in cart!</div>}
+        {/* loading animation */}
+        {
+          showContent?<ListDetail context={context}/>:
+          <div className=" flex justify-center  w-full text-neutral-500 my-1 ">
+            {isLoading&&<Loader2 className="  place-self-center size-10 animate-spin "/>}
+            {!isLoading&&cart.length===0&&<span>Nothing in cart ...</span>}
+          </div>
+        }
         <hr className=" my-2" />
         <div className="grid grid-cols-2 mx-2  gap-2">
           <span className=" font-semibold">
