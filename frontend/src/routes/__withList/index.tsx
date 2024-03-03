@@ -9,8 +9,7 @@ import { useSingleCategoryQuery } from "../../services/getSingleCategory";
 import { useInfiniteProductsQuery } from "../../services/getInfiniteProducts";
 import { Loader2 } from "lucide-react";
 import { useIntersection } from "@mantine/hooks";
-import { ComponentPropsWithRef, ElementRef, useEffect, useRef, forwardRef, FC } from "react";
-import { useProductsQuery } from "../../services/getProducts";
+import { ElementRef, useEffect, forwardRef } from "react";
 
 const PAGE_SIZE = 3 as const;
 
@@ -21,6 +20,7 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/__withList/")({
   component: Index,
   validateSearch: (search) => searchSchema.parse(search),
+ 
 });
 
 function Index() {
@@ -43,7 +43,7 @@ const ProductEntry = forwardRef<ElementRef<"div">, ProductEntryProps>(({ product
   const params = (prev: any) => ({ ...prev, pid: String(product.pid) });
 
   return (
-    <div className=" min-h-36  mr-auto" ref={ref}>
+    <div className=" min-h-36 mx-auto  md:ml-0" ref={ref}>
       <Thumbnail
         filename={product.image}
         alt={product.name}
@@ -54,7 +54,7 @@ const ProductEntry = forwardRef<ElementRef<"div">, ProductEntryProps>(({ product
         <Link
           to={to}
           params={params}
-          className="  text-center text-balance font-semibold text-base hover:underline underline-offset-2 "
+          className="  w-40  text-center text-balance font-semibold text-base hover:underline underline-offset-2 "
         >
           {product.name}
         </Link>
@@ -108,8 +108,7 @@ function MainSection() {
     threshold: 0.7,
   })
   const products = data?.pages.flatMap(e => e)
-  const hasMore = isLoading ||
-    (data?.pages.at(-1)?.length === PAGE_SIZE ?? false);
+  const hasMore = isLoading || data?.pages.at(-1)?.length === PAGE_SIZE;
 
 
   useEffect(() => {
@@ -140,7 +139,7 @@ function MainSection() {
           );
         })}
       </section>
-      <div className="w-full h-40 flex justify-center ">
+      <div className=" w-full h-40 flex justify-center ">
         {hasMore&&<Loader2  className="animate-spin size-24 place-self-center " />}
         {!hasMore && <p className=" place-self-center text-xl font-medium text-neutral-500  italic">No More ...</p>}
       </div>

@@ -7,7 +7,7 @@ const API_VERSION = "v1";
 const API_URL = `/api/${API_VERSION}/`;
 
 
-
+const isDev = process.env.NODE_ENV === "development";
 
 type RequestConfig<T> = Omit<AxiosRequestConfig, "url" | "method"> & {
   path: string;
@@ -20,7 +20,8 @@ export const request = async <T>(config: RequestConfig<T>):Promise<T> => {
   const method = config.method || "GET";
   const url = `${API_URL}${config.path}`;
   try {
-    // await new Promise(res=>setTimeout(res,200));
+    // Simulate network delay in development
+    isDev && await new Promise(res=>setTimeout(res,200));
     const response = await axios.request({
         ...config,
         method,

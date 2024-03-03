@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import { CartStorage, ShoppingCart, cartStorageSchema } from "../models/cart";
-import { Product,SimplifiedProduct } from "../models/products";
+import { SimplifiedProduct } from "../models/products";
 import { useLocalStorage } from "../utils/useLocalStorage";
 import { useInitCartQuery } from "../services/initCart";
 

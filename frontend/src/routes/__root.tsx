@@ -13,11 +13,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       <Outlet />
 
       </div>
-      <footer className=' flex justify-around bg-gray-700 text-white h-[7vh] items-center font-mono  font-medium  cursor-default' >
-       <span>IERG4210 Assignment Phase 2B</span>
-        <span>By: Shum Ching Chit </span>
-        <span>SID:1155159019</span>
-        <span>Contact: <a href={"mailto:"+contact_mail} className=' underline  cursor-pointer'>{contact_mail}</a></span>
+      <footer className='grid grid-flow-col justify-around overflow-y-scroll  bg-gray-700 text-white h-[7vh] items-center font-mono  font-medium  cursor-default' >
+       <div>IERG4210 Assignment Phase 3</div>
+        <div>By: Shum Ching Chit </div>
+        <div>SID: 1155159019</div>
+        <div>Contact: <a href={"mailto:"+contact_mail} className=' underline  cursor-pointer'>{contact_mail}</a></div>
       </footer>
 
     </div>

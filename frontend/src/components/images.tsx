@@ -21,10 +21,15 @@ export function FullImage({ filename, ...props }: Props) {
 
 export function Thumbnail({ filename, ...props }: Props) {
   const haveClickEvent = props.onClick ? true : false;
+  const splitedClasses = props.className?.split(" ");
+  const sizeClass = splitedClasses?.find((c) => c.startsWith("size-"));
+  const remainClass = splitedClasses?.filter((c) => !c.startsWith("size-")).join(" ");
+
   const classNames =
     (haveClickEvent ? "cursor-pointer hover:border-blue-500 " : "")
-    + " w-24 h-24 md:h-40 md:w-40 rounded-xl  border-2 border-transparent p-1   object-scale-down" 
-    + (props.className ? props.className : "");
+    + " rounded-xl  border-2 border-transparent p-1   object-scale-down" 
+    + (remainClass ? " " + remainClass : "")
+    + (sizeClass ? " "+ sizeClass : " size-40");
   return (
     <img
       {...props}

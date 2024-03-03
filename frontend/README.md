@@ -49,6 +49,8 @@ The product pages cam be navigated by clicking the thumbnail or product name.
 
 A hierarchical navigation menu is avaiable at the top of home page, category pages and product pages, the links can be used to navigate between routes.
 
+To show the loading state and mimic a network delay, a delay of 200ms is added to every request in developemnt mode.
+
 
 ### Dependences
 - API Server
