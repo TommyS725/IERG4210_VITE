@@ -34,10 +34,9 @@ app.get('/thumbnails/:filename',  (c) => {
   const extension = filename.split('.').pop()
   console.log(`filename: ${filename}, extension: ${extension}`)
   const filepath = `./images/${filename}`
-  const buffer = fs.readFileSync(filepath).buffer 
+  const buffer = fs.readFileSync(filepath).buffer  as ArrayBuffer
   c.status(200)
   c.header('Content-Type', `image/${extension}`) // means binary data
-  //@ts-expect-error
   return c.body(buffer)
 })
 

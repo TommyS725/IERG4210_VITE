@@ -28,7 +28,6 @@ app.get('/thumbnails/:filename', (c) => {
     const buffer = fs.readFileSync(filepath).buffer;
     c.status(200);
     c.header('Content-Type', `image/${extension}`); // means binary data
-    //@ts-expect-error
     return c.body(buffer);
 });
 console.log(`Server is running on port ${port}`);
