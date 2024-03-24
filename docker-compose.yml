@@ -7,9 +7,8 @@ services:
     ports:
       - 3000:80
     depends_on:
-      - frontend
-      - admin
-      - server
+      server:
+        condition: service_healthy
     restart: on-failure
 
   frontend:
@@ -42,10 +41,19 @@ services:
       - client:/app/client
       - admin:/app/admin
     depends_on:
-      - db
-      - redis
-      - frontend
-      - admin
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      frontend:
+        condition: service_completed_successfully
+      admin:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl" ,"localhost:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     restart: on-failure
 
 
@@ -56,12 +64,20 @@ services:
       MYSQL_DATABASE: store
     volumes:
       - ./mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
     restart: on-failure
   
   redis:
     image: redis:latest
-    environment:
-      REDIS_PASSWORD: admin
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
     restart: on-failure
 
 volumes:
