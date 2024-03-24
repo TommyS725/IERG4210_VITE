@@ -6,7 +6,7 @@
 This application is a shopping website built using React, Vue and Hono with TypeScript.
 
 ### Demo
-This application can be accessed at <https://https://secure.s12.ierg4210.ie.cuhk.edu.hk/>.
+This application can be accessed at <https://secure.s12.ierg4210.ie.cuhk.edu.hk/>.
 ### Developement
 #### Database
 Before running the application, a MySQL database and Redis sevrer is required. You can set it up locally or use Docker.
