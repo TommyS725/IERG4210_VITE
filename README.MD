@@ -3,7 +3,7 @@
 
 
 ### Overview
-This application is a shopping website built using React and Hono with TypeScript.
+This application is a shopping website built using React, Vue and Hono with TypeScript.
 
 ### Demo
 This application can be accessed at <https://https://secure.s12.ierg4210.ie.cuhk.edu.hk/>.
