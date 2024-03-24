@@ -3,8 +3,7 @@ import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
 
 import react from '@vitejs/plugin-react-swc'
 
-const apiServer = "http://localhost:8080"
-const imageServer = "http://localhost:8888"
+const server = process.env.API_SERVER || "http://localhost:8080";
 
 
 // https://vitejs.dev/config/
@@ -17,12 +16,8 @@ export default defineConfig({
     port: 3000,
     host:true,
     proxy: {
-      "/images": {
-        target: imageServer,
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/images/, '')
-      },
-      "/api": apiServer,
+      "/images": server,
+      "/api": server,
     },
   },
   preview: {

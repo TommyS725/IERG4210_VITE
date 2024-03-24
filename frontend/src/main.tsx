@@ -9,6 +9,8 @@ import { ShoppingCartContextProvider } from "./context/ShoppingCartContext";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { RouterContext } from "./utils/utils_types";
+import { UserContextProvider } from "./context/UserContext";
+
 
 //react query client
 const queryClient = new QueryClient({
@@ -43,9 +45,11 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <ShoppingCartContextProvider>
-          <RouterProvider router={router} />
-        </ShoppingCartContextProvider>
+        <UserContextProvider>
+          <ShoppingCartContextProvider>
+            <RouterProvider router={router} />
+          </ShoppingCartContextProvider>
+        </UserContextProvider>
       </QueryClientProvider>
     </StrictMode>
   );

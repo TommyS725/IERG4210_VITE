@@ -1,11 +1,14 @@
-import "./styles/global.css";
-import { setHeader } from "./header";
-import { setCards } from "./card";
+import './assets/main.css'
 
-main();
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-function main() {
-  setHeader();
-  setCards("category");
-  setCards("product");
-}
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')

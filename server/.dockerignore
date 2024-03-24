@@ -5,3 +5,8 @@
 dist/*
 
 bs-config.cjs
+
+# frontend build
+admin
+client
+images

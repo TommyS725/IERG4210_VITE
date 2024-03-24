@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { createFileRoute, } from "@tanstack/react-router";
 import NavBar from "../../components/navbar";
 
@@ -22,7 +23,7 @@ export const Route = createFileRoute("/__withList/products/$pid")({
     const { pid } = Route.useParams();
     return (
       <div>
-        <code>Product with id:{pid} Not Found</code>
+        <code>Product with ID:{pid} Not Found</code>
       </div>
     );
   },

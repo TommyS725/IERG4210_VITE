@@ -76,7 +76,7 @@ const ListDetail:FC<ListDetailProps> = (props) => {
 
 
 
-    return <ul className=" max-h-[50vh] overflow-auto">
+    return <ul className=" max-h-[50vh] overflow-auto p-1">
         <li className="flex  text-center px-2">
             <span>
                 {Array(lenDigits + 2)
@@ -93,13 +93,13 @@ const ListDetail:FC<ListDetailProps> = (props) => {
         {cart.map((item, index) => {
             return (
                 <li key={item.pid}>
-                    <div className="flex overflow-scroll gap-4 text-center px-2">
+                    <div className="flex overflow-auto  gap-4 text-center px-2">
                         <div>
                             {index + 1}.
                         </div>
                         <div className="grow grid grid-cols-3 gap-2">
                             <Link
-                                className=" text-nowrap overflow-x-auto hover:underline"
+                                className=" text-nowrap  overflow-auto hover:underline"
                                 to="/products/$pid"
                                 params={{ pid: item.pid }}
                             >

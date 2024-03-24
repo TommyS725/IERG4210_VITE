@@ -1,4 +1,3 @@
-# Build stage
 FROM node:latest as build
 WORKDIR /app
 COPY package*.json ./
@@ -6,12 +5,9 @@ RUN npm install
 COPY . .
 RUN npm run build
 
+EXPOSE 3000
+CMD ["npm", "preview"]
 
-# Production stage
-FROM nginx:alpine as prod
-COPY --from=build /app/_dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
 
 
 

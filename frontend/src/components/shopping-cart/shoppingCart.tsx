@@ -27,8 +27,8 @@ const ShoppingList: FC<ShoppingListProps> = ({context}) => {
     <>
       <div
         className={`p-3 bg-slate-800 text-zinc-300 gap-8 min-w-96 shadow-xl
-        hidden group-hover/scart:block group-hover/scart:absolute 
-        top-6 right-3 rounded-md`
+         hidden group-hover/scart:block group-hover/scart:absolute 
+        top-9 right-0 translate-x-24 rounded-md`
         }
       >
         <p className=" font-medium text-center text-white">Shopping List </p>
@@ -77,7 +77,7 @@ const ShoppingCart: FC = () => {
   return (
     <>
       <div className=" relative group/scart">
-        <div className=" flex hover:bg-slate-600 p-2 rounded-lg">
+        <div className=" flex hover:bg-slate-600 hover:opacity-55 p-2 rounded-lg">
           <div className=" relative">
             <CartIcon size={28} color="white " />
             {showCart && (

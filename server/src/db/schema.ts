@@ -7,6 +7,7 @@ import {
   varchar,
   char,
   float,
+  boolean,
 } from "drizzle-orm/mysql-core";
 
 export const categories = mysqlTable(
@@ -26,7 +27,7 @@ export const products = mysqlTable(
   {
     // ulid
     pid: char("pid",{length:26}).primaryKey(),
-    cid: varchar("cid",{length:255}).references(() => categories.cid, {onDelete: 'cascade'}).notNull(),
+    cid: varchar("cid",{length:255}).references(() => categories.cid, {onDelete:'restrict',onUpdate:'cascade'}).notNull(),
     name: varchar("name",{length:255}).notNull(),
     price: float("price").notNull(),
     description: text("description").notNull(),
@@ -39,4 +40,20 @@ export const products = mysqlTable(
   })
 );
 
+
+export const users = mysqlTable(
+  "users",
+  {
+    // uuid
+    userid: varchar("userid",{length:36}).primaryKey(),
+    username: varchar("username",{length:255}).notNull(),
+    email: varchar("email",{length:255}).notNull(),
+    hpassword: varchar("hpassword",{length:255}).notNull(),
+    salt : varchar("salt",{length:255}).notNull(),
+    admin: boolean("admin").default(false).notNull(),
+  },
+  (table) => ({
+    emailIdx: uniqueIndex("users_email_idx").on(table.email),
+  })
+);
 

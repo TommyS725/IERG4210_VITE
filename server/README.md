@@ -4,15 +4,26 @@
 This is the backend server  serving api for database query and mutation.
 
 ## Get started
-NodeJs and mysql server are required
+NodeJs ,mysql server and Redis server are required
+
+#### Build and link the frontend static content 
+1. To enable readng the static content in frontend, build the production build in `frontend` and `../admin` following their own instruction.
+2. Create symbotic links to link the build under the server directory.
+``` sh
+ln -s ../frontend/dist client
+ln -s ../admin/dist admin
+```
 
 #### Create  `.env ` file
 ```ini
 DB_URL = 'mysql2://{user}:{password}@{host}:{port}/{database}'
+REDIS_HOAT ='eg. localhost'
 ```
 
+
+
 ### Prerequisite 
-MYSQL shold be running and a clean databse with the name specified in `.env` is available.
+MYSQL and Redis shold be running and a clean databse with the name specified in `.env` is available.
 
 ### Migration
 ```sh
@@ -48,12 +59,6 @@ docker run --name {container-name} -p {port}:8080 {imaage-name}
 Replace {image-name}, {port} and {container-name} with the actual value.
     The admin panel will be availabe at <localhost:{port}>
 
-#### Serve Images
-To serve images for development, run
-```sh
-npm run dev:iamges
-```
-Images will be serve at `localhost:8888/images`
 
 
 

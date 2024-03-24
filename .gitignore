@@ -4,7 +4,7 @@
 *.sh
 
 
-backup_scripts
+scripts
 
 .DS_Store
 
@@ -14,3 +14,9 @@ bun.lockb
 /node_modules
 /package-lock.json
 /package.json
+
+# remote admin
+/admin-remote
+
+# archives and not be submitted to the repository
+archive.*

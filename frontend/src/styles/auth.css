@@ -1,0 +1,43 @@
+.auth  label, h1{
+    color: rgb(4, 24, 72);
+}
+
+.auth .card {
+  border-color: rgb(75 85 99);
+  border-width: 4px;
+  border-radius: 0.5rem;
+  background: white;
+  padding: 1rem;
+  @apply shadow-2xl;
+}
+
+.auth  label {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.auth  input {
+  border-width: 0 0 1px 0;
+  width: 90%;
+  border-color: rgb(179, 176, 176);
+  color: rgb(46, 64, 94);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+
+.auth  input:hover {
+  border-color: rgb(124, 124, 124);
+  width: 95%;
+  transition: all 200ms;
+}
+
+.auth  input:focus{
+  border-bottom-width: 2px;
+  border-color: rgb(30, 49, 104);
+  transition: all 100ms;
+  outline: none;
+}

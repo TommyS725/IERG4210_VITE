@@ -2,7 +2,11 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc ",
+    "build": "tsc",
+    "build:main": "cd ../frontend && npm run build",
+    "build:admin": "cd ../admin && npm run build",
+    "build:front": "npm run build:main && npm run build:admin",
+    "build:all": "npm run build && npm run build:front",
     "start": "node ./dist/src/index.js",
     "db:pull": "drizzle-kit introspect:mysql",
     "db:push": "drizzle-kit push:mysql",
@@ -15,17 +19,18 @@
     "dev:server": "concurrently -k  -n Dev-API,Images \"npm run dev\" \"npm run dev:images\""
   },
   "dependencies": {
-    "@types/node": "^20.11.17",
     "@hono/node-server": "^1.7.0",
     "@hono/zod-validator": "^0.1.11",
+    "@types/node": "^20.11.17",
     "dotenv": "^16.4.4",
+    "drizzle-kit": "^0.20.14",
     "drizzle-orm": "^0.29.3",
     "hono": "^4.0.2",
     "mysql2": "^3.9.1",
+    "redis": "^4.6.13",
     "typescript": "^5.3.3",
     "ulid": "^2.3.0",
-    "zod": "^3.22.4",
-    "drizzle-kit": "^0.20.14"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "browser-sync": "^3.0.2",

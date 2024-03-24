@@ -1,19 +1,10 @@
-FROM  node:latest as build
+FROM node:latest 
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
 
-WORKDIR  /app
+EXPOSE 5001
+CMD ["npm", "preview"]
 
-COPY  package*.json /app
-
-RUN  npm install
-
-COPY . /app
-
-RUN  npm run build
-
-FROM  nginx:alpine as prod
-
-COPY  --from=build /app/_dist /usr/share/nginx/html
-
-EXPOSE  80
-
-CMD  ["nginx", "-g", "daemon off;"]

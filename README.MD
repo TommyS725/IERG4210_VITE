@@ -1,4 +1,4 @@
-# 2024 Sem2 IERG4210 Assignment Phase 2B
+# 2024 Sem2 IERG4210 Assignment Phase 4
 ## Shum Ching Chit 1155159019
 
 
@@ -6,12 +6,13 @@
 This application is a shopping website built using React and Hono with TypeScript.
 
 ### Demo
-This application can be accessed at <http://13.251.226.176>.
+This application can be accessed at <https://https://secure.s12.ierg4210.ie.cuhk.edu.hk/>.
 ### Developement
 #### Database
-Before running the application, a MySQL database is required. You can set it up locally or use Docker.
+Before running the application, a MySQL database and Redis sevrer is required. You can set it up locally or use Docker.
 
 ##### **Local Deployment**
+###### MySQL
 1. Install MySQL using a package manager or installer.
 2. Create a database named `store`. Configure the user and password in the `./server/.env` file.
 3. Populate the database with data by running the following command:
@@ -20,32 +21,32 @@ Before running the application, a MySQL database is required. You can set it up 
     ```
     Replace `{user}` and `{password}` with your MySQL username and password.
 
+###### Redis
+1. Install Redis using a package manager or installer.
+2. Start the Redis server. Usually, this can be done by running `redis-server`.
+3. Configure the host of Redis connection in the `./server/.env` file. 
+
 ##### **Docker Deployment (Recommended)**
 1. Start a Docker container with the following command:
     ```sh
     docker run --name 4210-dev-db -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=admin -e MYSQL_DATABASE=store -v $(pwd)/mysql:/var/lib/mysql mysql:latest
     ```
-    This command starts a MySQL container with the database name `store` and root password `admin`. It also mounts the `./mysql` directory from your host to the `/var/lib/mysql` directory in the container.
-2. The database is now up and ready to use.
+    This command starts a MySQL container with the database name `store` and root password `admin` at the default port (3306). It also mounts the `./mysql` directory from your host to the `/var/lib/mysql` directory in the container.
+2. Start a Docker container with the following command:
+    ```sh
+    docker run --name 4210-dev-redis -d -p 6379:6379 redis:latest
+    ```
+    This command starts a Redis container with the default configuration. It exposes the Redis server at the default port (6379).
+3. The MySQL and Redis database is now up and ready to use.
 
 #### Start development server
 In this step, Node.js is required.
-1. Frontend
-    In `./frontend` directory, run
-    ```sh
-    npm i
-    npm run dev
-    ```
-    The frotend client will be served at <http://localhost:3000>
-
-2. Server
-    In `./server` directory, run
-    ```sh
-    npm i
-    npm run dev:server
-    ```
-    The API server will be served at <http://localhost:8080>
-    The image server will be served at <http://localhost:8888>
+##### Client
+See [this section](/frontend/README.md#development) for details.
+##### Admin
+See [this section](/admin/README.md#development) for details.
+##### Client
+See [this section](/server/README.md#get-started) for details.
 
 ##### Using Docker Compose
 You can also use Docker Compose to create dev DB and images server by running
@@ -54,32 +55,31 @@ docker-compose -f dev.yml up
 ```
 By default,
 - MySQL Database will be served at `localhost:3306` 
-- Images server  will be served at `localhost:8888`
+- Redis server  will be served at `localhost:6379`
 
-To start API server without serving static images, run
-```sh
-npm i
-npm run dev
-```
-in `./server` directory instead
 
 ### Production
 The production build can be served up locally or using Docker.
 #### **Local Deployment**
-1. Set up the database and environment configuration following [this part](#database)
-2. Build the frontend. In the `./frontend` directory, run
+1. Set up the databases and environment configuration following [this part](#database)
+2. Create production build
 ```sh
-npm i
-npm run build
+cd server
+npm run build:all
 ```
-
-3. Build the server. In the `./server` directory, run
+3. Link frontend and admin build under sever
 ```sh
-npm i
-npm run build
+cd server 
+ln -s ../frontend/dist client
+ln -s ../admin/dist admin
 ```
-4. Install Nginx
-5. Use the following nginx config
+4. Start server
+```sh
+cs server
+npm run start
+```
+5. Install Nginx
+6. Use the following nginx config
 ```conf
 server {
     listen {port};
@@ -88,11 +88,6 @@ server {
     proxy_hide_header X-Powered-By;
 
     location / {
-            root  {absolute path to ./frontend/dist};
-            try_files $uri $uri/  /index.html =404;
-    }
-
-    location /api {
         proxy_pass http://localhost:8080;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -101,21 +96,16 @@ server {
         proxy_cache_bypass $http_upgrade;
     }
 
-    location /images {
-        root {absolute path to ./server};
-        try_files $uri  =404;
-    }
-
 }
 ```
-6. Start nginx by running
+7. Start nginx by running
 ```sh
 sudo service nginx start
 ```
 
-7. The application is now ready to use at `{port}`.
+8. The application is now ready to use at `{port}`.
 
-PS.  If you encounter permission issues in step 6, you may need to run the command with `sudo` or change the permission of the directories using `chmod` and `chown`.
+PS.  If you encounter permission issues in step 7, you may need to run the command with `sudo` or change the permission of the directories using `chmod` and `chown`.
 
 #### **Docker Deployment**
 1. Change the port exposed by Nginx in `docker-compose.yml` to the desired port (default is 3000)
@@ -160,30 +150,6 @@ server {
 }
 ```
     
-### Admin Panel
-An admin panel is provided to use the backend api with a graphical UI.
-#### Running locoally
-The installation and user instruction can refer to [README](./admin/README.md)
-#### With Docker Compsoe
-1. Change the port exposed by Nginx in `docker-compose.admin.yml` to the desired port for client (default is 3000), you can refer to [here](#docker-deployment)
-2. Change the port exposed by Nginx in `docker-compose.admin.yml` to the desired port (default is 3001)
-    ```yml
-    ...
-    admin:
-    build:
-      context: ./admin
-      dockerfile: Dockerfile
-    ports:
-      - {port}:80
-    depends_on:
-      - server
-    restart: on-failure
-    ...
-    ```
-3. Start the service by running
-```sh
-docker-compose -f docker-compose.adin up
-```
 
 ### Directory details
 - `./frontend`
@@ -193,13 +159,16 @@ docker-compose -f docker-compose.adin up
    Hono server for serving images and API for database query and mutation
 
 - `./admin`
-    Amdin panel as the UI for API server
+    Amdin panel for admin operations
 
 - `./mysql`
     MySQL data for docker container
 
 - `./nginx`
     Nginx config for docker compose
+
+- `./data`
+    Typescript database items records and imges.
 
 
 

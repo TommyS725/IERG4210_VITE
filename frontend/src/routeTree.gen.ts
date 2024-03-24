@@ -3,11 +3,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LoginImport } from './routes/login'
+import { Route as ChangePasswordImport } from './routes/change-password'
 import { Route as withListImport } from './routes/__withList'
 import { Route as withListIndexImport } from './routes/__withList/index'
 import { Route as withListProductsPidImport } from './routes/__withList/products.$pid'
 
 // Create/Update Routes
+
+const LoginRoute = LoginImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ChangePasswordRoute = ChangePasswordImport.update({
+  path: '/change-password',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const withListRoute = withListImport.update({
   id: '/__withList',
@@ -32,6 +44,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof withListImport
       parentRoute: typeof rootRoute
     }
+    '/change-password': {
+      preLoaderRoute: typeof ChangePasswordImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
     '/__withList/': {
       preLoaderRoute: typeof withListIndexImport
       parentRoute: typeof withListImport
@@ -47,4 +67,6 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   withListRoute.addChildren([withListIndexRoute, withListProductsPidRoute]),
+  ChangePasswordRoute,
+  LoginRoute,
 ])

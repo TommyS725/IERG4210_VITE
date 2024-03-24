@@ -3,7 +3,7 @@ import CategoryMenu from '../components/categoryMenu'
 
 export const Route = createFileRoute('/__withList')({
   component: () => <>
-  <main className={`flex flex-row py-1 gap-4 bg-transparent`}>
+  <main className={`flex flex-row  gap-4 bg-transparent`}>
     <section className=" min-w-max">
       <CategoryMenu />
     </section>

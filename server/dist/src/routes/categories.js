@@ -3,8 +3,8 @@ import { db, schema } from "../db/client.js";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
-import { validationCallBack } from "../utils.js";
-import { adminAuth } from "../auth.js";
+import { FormValidator, validationCallBack } from "../lib/utils.js";
+import { checkAdminAuthToken } from "../lib/middleware.js";
 const categories = new Hono();
 //get all categories
 categories.get("/", async (c) => {
@@ -26,13 +26,17 @@ categories.get("/:cid", async (c) => {
     }
     return c.json(data, 200);
 });
-categories.use(adminAuth);
+//data modification routes
+categories.use(checkAdminAuthToken);
 const postCategorySchema = z.object({
     name: z.string(),
 });
 // create a new category
-categories.post("/", zValidator("form", postCategorySchema, validationCallBack["form"]), async (c) => {
-    const { name } = c.req.valid("form");
+categories.post("/", async (c) => {
+    const parse = await FormValidator.parse(c, postCategorySchema);
+    if (!parse.success)
+        return FormValidator.errorRespone(c);
+    const { name } = parse.data;
     const cid = crypto.randomUUID();
     const entry = { cid, name };
     try {
@@ -48,9 +52,12 @@ const putCategorySchema = z.object({
     name: z.string(),
 });
 // update a category
-categories.put("/:cid", zValidator("form", putCategorySchema, validationCallBack.form), async (c) => {
+categories.put("/:cid", async (c) => {
     const cid = c.req.param("cid");
-    const { name } = c.req.valid("form");
+    const parse = await FormValidator.parse(c, putCategorySchema);
+    if (!parse.success)
+        return FormValidator.errorRespone(c);
+    const { name } = parse.data;
     try {
         const result = await db
             .update(schema.categories)
@@ -58,7 +65,7 @@ categories.put("/:cid", zValidator("form", putCategorySchema, validationCallBack
             .where(eq(schema.categories.cid, cid));
         const affectedRows = result[0].affectedRows;
         if (affectedRows === 0) {
-            return c.text("Category not found", 400);
+            return c.text("Category not found", 404);
         }
         return c.json({ cid, name }, 200);
     }
@@ -71,9 +78,13 @@ categories.put("/:cid", zValidator("form", putCategorySchema, validationCallBack
 categories.delete("/", zValidator("query", z.object({ name: z.string() }), validationCallBack.query), async (c) => {
     const name = c.req.valid("query").name;
     try {
-        await db
+        const res = await db
             .delete(schema.categories)
             .where(eq(schema.categories.name, name));
+        const affectedRows = res[0].affectedRows;
+        if (affectedRows === 0) {
+            return c.text("Category not found", 404);
+        }
         return c.body(null, 204);
     }
     catch (error) {
@@ -85,7 +96,11 @@ categories.delete("/", zValidator("query", z.object({ name: z.string() }), valid
 categories.delete("/:cid", async (c) => {
     const cid = c.req.param("cid");
     try {
-        await db.delete(schema.categories).where(eq(schema.categories.cid, cid));
+        const res = await db.delete(schema.categories).where(eq(schema.categories.cid, cid));
+        const affectedRows = res[0].affectedRows;
+        if (affectedRows === 0) {
+            return c.text("Category not found", 404);
+        }
         return c.body(null, 204);
     }
     catch (error) {

@@ -4,8 +4,8 @@ import { and, desc, eq, lt } from "drizzle-orm";
 import { ulid } from "ulid";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { deleteFile, paginationSchema, renameFile, roundNumber, saveImage, validationCallBack, } from "../utils.js";
-import { adminAuth } from "../auth.js";
+import { FormValidator, deleteFile, paginationSchema, renameFile, roundNumber, saveImage, validationCallBack, } from "../lib/utils.js";
+import { checkAdminAuthToken } from "../lib/middleware.js";
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ALLOWED_MIME_TYPES = [
     "image/jpg",
@@ -47,7 +47,8 @@ productsRoute.get("/:pid", async (c) => {
     }
     return c.json(data, 200);
 });
-productsRoute.use(adminAuth);
+//data modification routes
+productsRoute.use(checkAdminAuthToken);
 const postProductSchema = z.object({
     name: z.string(),
     price: z.string(),
@@ -56,7 +57,11 @@ const postProductSchema = z.object({
     inventory: z.string().default("0"),
 });
 // create a new product
-productsRoute.post("/", zValidator("form", postProductSchema, validationCallBack.form), async (c) => {
+productsRoute.post("/", async (c) => {
+    const parse = await FormValidator.parse(c, postProductSchema);
+    if (!parse.success)
+        return FormValidator.errorRespone(c);
+    const { name, price: _price, cid, description, inventory: _int } = parse.data;
     const pid = ulid();
     const fd = await c.req.formData();
     const image = fd.get("image");
@@ -69,9 +74,8 @@ productsRoute.post("/", zValidator("form", postProductSchema, validationCallBack
     if (!ALLOWED_MIME_TYPES.includes(image.type)) {
         return c.text("Invalid image type", 400);
     }
-    const { name, price: _price, description, inventory: _int, cid, } = c.req.valid("form");
     const price = roundNumber(parseFloat(_price), 2);
-    const inventory = Math.floor(parseInt(_int));
+    const inventory = Math.floor(parseInt(_int ?? "0"));
     if (isNaN(price) || price < 0 || isNaN(inventory) || inventory < 0) {
         return c.text("Invalid form data", 400);
     }
@@ -109,12 +113,15 @@ const putProductSchema = z.object({
     inventory: z.string().optional(),
 });
 // update a product
-productsRoute.put("/:pid", zValidator("form", putProductSchema, validationCallBack.form), async (c) => {
+productsRoute.put("/:pid", async (c) => {
+    const parse = await FormValidator.parse(c, putProductSchema);
+    if (!parse.success)
+        return FormValidator.errorRespone(c);
+    const { name: _name, price: _price, description: _description, inventory: _int, cid: _cid, } = parse.data;
     const pid = c.req.param("pid");
     const fd = await c.req.formData();
     const image_entry = fd.get("image");
     const image = image_entry instanceof File && image_entry.size ? image_entry : undefined;
-    const { name: _name, price: _price, description: _description, inventory: _int, cid: _cid, } = c.req.valid("form");
     const name = _name ? _name : undefined;
     const description = _description ? _description : undefined;
     const cid = _cid ? _cid : undefined;
@@ -163,7 +170,7 @@ productsRoute.put("/:pid", zValidator("form", putProductSchema, validationCallBa
     // console.log(updateData);
     try {
         //perform update
-        await db.transaction(async (tx) => {
+        const success = await db.transaction(async (tx) => {
             //check if need to update image col and directory
             if (needUpdateImage) {
                 const data = await db.query.products.findFirst({
@@ -210,6 +217,7 @@ productsRoute.put("/:pid", zValidator("form", putProductSchema, validationCallBa
             if (affectedRows === 0) {
                 throw new Error("Product not found");
             }
+            // console.log(fileOpToDo);
             //perform file operations
             if (fileOpToDo.rename) {
                 await renameFile(fileOpToDo.rename.oldName, fileOpToDo.rename.newName);
@@ -223,7 +231,7 @@ productsRoute.put("/:pid", zValidator("form", putProductSchema, validationCallBa
             return true;
         });
         return c.json({
-            success: true,
+            success: success,
         }, 200);
     }
     catch (error) {
@@ -252,7 +260,11 @@ productsRoute.delete("/:pid", async (c) => {
     }
     try {
         //perform delete
-        await db.delete(products).where(eq(products.pid, pid));
+        const res = await db.delete(products).where(eq(products.pid, pid));
+        const affectedRows = res[0].affectedRows;
+        if (affectedRows === 0) {
+            return c.text("Product not found", 404);
+        }
         //delete image
         if (toDelete) {
             await deleteFile(toDelete);

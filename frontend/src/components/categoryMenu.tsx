@@ -1,5 +1,5 @@
 import { Category } from "../models/category";
-import { Link, useSearch } from "@tanstack/react-router";
+import { Link,  useSearch } from "@tanstack/react-router";
 import { getAllCategories } from "../services/getCategories";
 import { Loader2 } from "lucide-react";
 
@@ -54,7 +54,8 @@ const CategoryMenu = () => {
   const search = useSearch({
     strict: false,
   }) as { cid: string | undefined };
-  const cid = search.cid;
+  const isFront = window.location.pathname === "/";
+  const cid = isFront ? search.cid : undefined;
 
 
   return (

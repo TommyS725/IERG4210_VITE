@@ -6,11 +6,15 @@ This is the frontend client for shopping website built by React.
 ## Installation
 Require NodeJS
 ### Development
-1. Install dependences
+1. Create a env file with working api server (default to be <http://localhost:8080>)
+```ini
+API_SERVER='API server URL'
+```
+2. Install dependences
 ```sh
 npm i
 ```
-2. Start the server
+3. Start the dev server
 ```sh
 npm run dev
 ```
@@ -28,14 +32,12 @@ npm run build
 npm run preview
 ```
 The admin panel will be availabe at <localhost:3001>
-##### Serve static contents
-Serve the static contents at `./_dist/` using applications like `nginx`.
 
 #### Using Docker container
 Build and run a Docker container in this directory by running
 ```sh
-docker build -t {image-name}.
-docker run --name {container-name} -p {port}:80 {imaage-name}
+docker build -t {image-name} .
+docker run --name {container-name} -p {port}:3000 {imaage-name}
 ```
 Replace {image-name}, {port} and {container-name} with the actual value.
 The admin panel will be availabe at <localhost:{port}>
@@ -49,11 +51,9 @@ The product pages cam be navigated by clicking the thumbnail or product name.
 
 A hierarchical navigation menu is avaiable at the top of home page, category pages and product pages, the links can be used to navigate between routes.
 
-To show the loading state and mimic a network delay, a delay of 200ms is added to every request in developemnt mode.
 
 
 ### Dependences
 - API Server
-- Images Server
 
 

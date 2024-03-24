@@ -1,11 +1,13 @@
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
+import { Link, createFileRoute,  useNavigate } from "@tanstack/react-router";
 import NavBar from "../../components/navbar";
 import { SimplifiedProduct } from "../../models/products";
 import { useEditTitle } from "../../utils/title";
 import AddToCart from "../../components/shopping-cart/addToCart";
 import { Thumbnail } from "../../components/images";
 import { z } from "zod";
-import { useSingleCategoryQuery } from "../../services/getSingleCategory";
+import {  useSingleCategoryQuery } from "../../services/getSingleCategory";
 import { useInfiniteProductsQuery } from "../../services/getInfiniteProducts";
 import { Loader2 } from "lucide-react";
 import { useIntersection } from "@mantine/hooks";
@@ -20,7 +22,6 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/__withList/")({
   component: Index,
   validateSearch: (search) => searchSchema.parse(search),
- 
 });
 
 function Index() {
@@ -76,10 +77,11 @@ type NavWithCidProps = {
 
 function NavWithCid({ cid }: NavWithCidProps) {
   const baseNav = { name: "Home", path: "/" };
-  const { data: category } = useSingleCategoryQuery(cid);
-  if (!category) {
-    return <NavBar navItems={[baseNav]} />;
+  const { data: category ,isError} = useSingleCategoryQuery(cid);
+  if (!category && isError) {
+    window.location.href = "/404";
   }
+  
   return (
     <NavBar
       navItems={[
@@ -87,7 +89,7 @@ function NavWithCid({ cid }: NavWithCidProps) {
           ...baseNav,
           active: false,
         },
-        { name: category.name, path: `/?cid=${cid}`, active: true },
+        { name: category?.name??"Category", path: `/?cid=${cid}`, active: true },
       ]}
     />
   );
@@ -112,7 +114,7 @@ function MainSection() {
 
 
   useEffect(() => {
-    if (entry?.isIntersecting) {
+    if (entry?.isIntersecting && hasMore && !isLoading) {
       fetchNextPage()
       // console.log("fetching next page")
     }
@@ -140,7 +142,7 @@ function MainSection() {
         })}
       </section>
       <div className=" w-full h-40 flex justify-center ">
-        {hasMore&&<Loader2  className="animate-spin size-24 place-self-center " />}
+        {hasMore&&<Loader2   className="animate-spin size-24 place-self-center " />}
         {!hasMore && <p className=" place-self-center text-xl font-medium text-neutral-500  italic">No More ...</p>}
       </div>
     </>
