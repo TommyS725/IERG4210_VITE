@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { db, schema } from "../db/client.js";
 import { inArray } from "drizzle-orm";
-const shoppingCart = new Hono();
-shoppingCart.get("/init", async (c) => {
+const shoppingCartHandler = new Hono();
+shoppingCartHandler.get("/init", async (c) => {
     const pids = c.req.queries('pid[]') ?? [];
     if (pids.length === 0) {
         return c.json([]);
@@ -18,4 +18,4 @@ shoppingCart.get("/init", async (c) => {
     // console.log(rows)
     return c.json(rows);
 });
-export default shoppingCart;
+export default shoppingCartHandler;

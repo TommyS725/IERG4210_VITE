@@ -3,10 +3,16 @@ import Cookies from "./cookies.js";
 import Session from "./session.js";
 import { db } from "../db/client.js";
 import { ClientError, hashAuthToken } from "./utils.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+
+const is_dev = process.env.IS_DEV === "true";
 
 export const checkCsrf = createMiddleware(async (c, next) => {
   const csrfToken = Cookies.getCsrfCookie(c);
-  if (!csrfToken) {
+  if (!csrfToken || csrfToken === "") {
     console.log("no csrf token for ", c.req.path);
     return ClientError.badRequest(c);
   }
@@ -65,10 +71,52 @@ export const requireAdmin = createMiddleware(async (c, next) => {
 });
 
 export const setCsrfCookie = createMiddleware(async (c, next) => {
-  const cookie = Cookies.getCsrfCookie(c);
-  if (!cookie) {
-    // console.log("setting csrf cookie");
-    Cookies.setCsrfCookie(c);
-  }
+  // const cookie = Cookies.getCsrfCookie(c);
+  // console.log("csrf cookie", cookie);
+  // if (!cookie) {
+  //   console.log("setting csrf cookie");
+  //   Cookies.setCsrfCookie(c);
+  // }
+  Cookies.setCsrfCookie(c);
   await next();
 });
+
+
+export const requireSecure = createMiddleware(async (c, next) => {
+  if(is_dev) return await next();
+  const protocol = c.req.header("x-forwarded-proto");
+  // console.log("protocol", protocol);
+  if(protocol === "https") return await next();
+  return ClientError.upgradeRequired(c);
+});
+
+
+export const checkAuthToken = createMiddleware(async (c, next) => {
+  console.log("auth token check on", c.req.path);
+  const session = await Session.getSession(c);
+  const token = Cookies.getAuthCookie(c);
+  if (!session) return ClientError.unauthorized(c);
+  const user = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.userid, session.userId),
+  });
+  if (!user || !token) {
+    if (!user) await Session.clearSession(c);
+    return ClientError.unauthorized(c);
+  }
+
+  const { hpassword, salt, userid } = user;
+  const hashedToken = hashAuthToken(
+    userid,
+    session.authExpiry,
+    hpassword,
+    salt
+  );
+  const match = hashedToken === token;
+  if (!match) {
+    await Session.clearSession(c);
+    Cookies.deleteAuthCookie(c);
+    return ClientError.unauthorized(c);
+  }
+  console.log("auth token check passed", c.req.path);
+  await next();
+})

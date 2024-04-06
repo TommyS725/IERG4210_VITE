@@ -24,11 +24,7 @@ const navClass = computed(() => 'side-bar group ' + (isOpen.value ? 'open' : '')
       >
         {{ capitalize(table) }}
       </RouterLink>
-      <button
-        id="close-side-btn"
-        class="hover:bg-opacity-10 hover:bg-white rounded-full p-1"
-        @click="isOpen = false"
-      >
+      <button id="close-side-btn" class="hover:opacity-40" @click="isOpen = false">
         <IconClose />
       </button>
     </div>

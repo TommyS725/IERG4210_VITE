@@ -43,7 +43,7 @@ export const request = async <T>(config: RequestConfig<T>):Promise<T> => {
     if (config.onError) {
       return config.onError(error);
     }
-    console.error("Request failed", error);
+    // console.error("Request failed", error);
     if(isAxiosError(error) ){
       if(error.response?.status === 404){
         throw notFound();
@@ -53,4 +53,47 @@ export const request = async <T>(config: RequestConfig<T>):Promise<T> => {
     throw error;
   }
   
+};
+
+
+type WithMutationConfig<T,M> = Omit<RequestConfig<T>,"onError"> & {
+  mutation: (data: T)=>M;
+  onError?: (error: any) => M;
+  onMutationSuccess?: (data: M) => void;
+};
+
+export const requestWithMutation = async <T,M>(config: WithMutationConfig<T,M>):Promise<M> => {
+  const method = config.method || "GET";
+  const url = `${API_URL}${config.path}`;
+  try {
+    const response = await axios.request({
+        ...config,
+        method,
+        url,
+      });
+      const parse = config.schema.safeParse(response.data);
+      if (!parse.success) {
+        throw new Error(`Unable to parse data from ${url}.`);
+      }
+      if(config.onSuccess){
+        config.onSuccess(parse.data);
+      }
+      const mutated =  config.mutation(parse.data);
+      if (config.onMutationSuccess) {
+        config.onMutationSuccess(mutated);
+      }
+      return mutated;
+  } catch (error) {
+    if (config.onError) {
+      return config.onError(error);
+    }
+    // console.error("Request failed", error);
+    if(isAxiosError(error) ){
+      if(error.response?.status === 404){
+        throw notFound();
+      }
+      throw new Error(`Request to ${url} failed with status ${error.response?.status}.`);
+    }
+    throw error;
+  }
 };

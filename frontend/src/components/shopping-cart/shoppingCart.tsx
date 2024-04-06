@@ -1,26 +1,30 @@
+/* eslint-disable no-extra-boolean-cast */
 import { ShoppingCartContextType, useShoppingCart } from "../../context/ShoppingCartContext";
 import { ShoppingCart as CartIcon, Loader2 } from "lucide-react";
 import { FC } from "react";
 import ListDetail from "./list-detail";
 import Button from "../Button";
+import CheckOutBtn from "./checkOutBtn";
+
 
 type ShoppingListProps = {
-  context:ShoppingCartContextType
+  context: ShoppingCartContextType
 }
 
-const ShoppingList: FC<ShoppingListProps> = ({context}) => {
-  const { isLoading,cart ,roundedTotal,isReady,clearCart} = context;
-  const showContent =!isLoading && cart.length > 0 
-  const checkOut = () => {
-    if (isLoading) {
-      return
-    }
-    const transaction = cart.map((item) => {
-      return { pid: item.pid, quantity: item.quantity };
-    });
-    if (!transaction.length) return;
-    window.alert(`Transaction: ${JSON.stringify(transaction)}`);
-  };
+const ShoppingList: FC<ShoppingListProps> = ({ context }) => {
+  const { isLoading, cart, roundedTotal, isReady, clearCart } = context;
+  const showContent = !isLoading && cart.length > 0
+  // const checkOutErrorMessage = !!user ?"":"Please login to checkout";
+  // const checkOut = () => {
+  //   if (isLoading) {
+  //     return
+  //   }
+  //   const transaction = cart.map((item) => {
+  //     return { pid: item.pid, quantity: item.quantity };
+  //   });
+  //   if (!transaction.length) return;
+  //   window.alert(`Transaction: ${JSON.stringify(transaction)}`);
+  // };
 
 
   return (
@@ -36,13 +40,14 @@ const ShoppingList: FC<ShoppingListProps> = ({context}) => {
         <hr className=" my-2" />
         {/* loading animation */}
         {
-          showContent?<ListDetail context={context}/>:
-          <div className=" flex justify-center  w-full text-neutral-500 my-1 ">
-            {isLoading&&<Loader2 className="  place-self-center size-10 animate-spin "/>}
-            {!isLoading&&cart.length===0&&<span>Nothing in cart ...</span>}
-          </div>
+          showContent ? <ListDetail context={context} /> :
+            <div className=" flex justify-center  w-full text-neutral-500 my-1 ">
+              {isLoading && <Loader2 className="  place-self-center size-10 animate-spin " />}
+              {!isLoading && cart.length === 0 && <span>Nothing in cart ...</span>}
+            </div>
         }
         <hr className=" my-2" />
+
         <div className="grid grid-cols-2 mx-2  gap-2">
           <span className=" font-semibold">
             Total:
@@ -51,18 +56,19 @@ const ShoppingList: FC<ShoppingListProps> = ({context}) => {
             ${roundedTotal}
           </span>
           <Button className=" text-neutral-300 hover:underline hover:text-red-500 opacity-70 text-start"
-          disabled={!isReady || !cart.length}
-          onClick={clearCart}
+            disabled={!isReady || !cart.length}
+            onClick={clearCart}
           >
             Clear All
           </Button>
-          <Button
+          <CheckOutBtn />
+          {/* <Button
             className="border-2 py-1 border-blue-700 bg-blue-500 text-white   rounded-2xl hover:bg-opacity-85 hover:border-sky-400 hover:ring-2 ring-sky-400 font-bold hover:font-extrabold "
             disabled={!isReady || !cart.length}
             onClick={checkOut}
           >
             Check Out
-          </Button>
+          </Button> */}
         </div>
       </div>
     </>
@@ -71,7 +77,7 @@ const ShoppingList: FC<ShoppingListProps> = ({context}) => {
 
 const ShoppingCart: FC = () => {
   const context = useShoppingCart();
-  const { isReady,cart} = context;
+  const { isReady, cart } = context;
   const cartLen = isReady ? cart.length : 0;
   const showCart = cartLen > 0;
   return (

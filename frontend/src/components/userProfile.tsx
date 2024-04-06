@@ -1,4 +1,4 @@
-import { Loader2, User2 } from "lucide-react";
+import { Loader2, Mail, User2 } from "lucide-react";
 import { useUser } from "../context/UserContext";
 import { API_URL } from "../services/core";
 import { Link } from "@tanstack/react-router";
@@ -23,10 +23,13 @@ function ActionList() {
   return (
     <nav className="hidden group-hover/profile:absolute group-hover/profile:block
     p-3 px-6 bg-slate-900 text-white rounded-lg shadow-xl top-9 right-0 text-nowrap 
-    min-w-32
+    min-w-32 
     ">
       <ul className="">
-        {user && <li className=" overflow-auto" >{`Email: ${user.email}`}</li>}
+        {user && <li className=" flex flex-nowrap space-x-2 items-center  overflow-auto" >
+          <Mail size={20} color="white" />
+          <span>{user.email}</span>
+          </li>}
         {user && <ListSeparator />}
         {
           isAdmin && <>
@@ -40,14 +43,20 @@ function ActionList() {
         }
         {user && <li>
           <Button isLink>
-            <Link to="/change-password">Chnage Password</Link>
+            <Link to="/my-orders">My Orders</Link>
+          </Button>
+        </li>}
+        {user && <ListSeparator />}
+        {user && <li>
+          <Button isLink>
+            <Link to="/change-password">Change Password</Link>
           </Button>
         </li>}
         {user && <ListSeparator />}
         <li >
           <Button isLink>
-          {user ? <a href={`${API_URL}auth/logout`}>Logout</a>
-            : <Link to="/login">Login</Link>}
+            {user ? <a href={`${API_URL}auth/logout`}>Logout</a>
+              : <Link to="/login">Login</Link>}
           </Button>
         </li>
       </ul>
@@ -59,10 +68,11 @@ function ActionList() {
 export default function UserProfile() {
   const { user, isLoading } = useUser();
 
-  if (isLoading) {
-    return <Loader2 size={iconSize} color="gray" className="animate-spin" />
-  }
 
+  if (isLoading) {
+    return <Loader2 size={iconSize} color="gray" className="m-2 animate-spin" />
+
+  }
 
   return (
     <div className="relative group/profile">

@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import { CartStorage, ShoppingCart, cartStorageSchema } from "../models/cart";
-import { SimplifiedProduct } from "../models/products";
+import { SimplifiedProduct } from "../models/product";
 import { useLocalStorage } from "../utils/useLocalStorage";
 import { useInitCartQuery } from "../services/initCart";
 
@@ -26,6 +26,7 @@ export type ShoppingCartContextType = {
   addItem: (product: SimplifiedProduct, quantity: number) => void;
   removeItem: (pid: string) => void;
   updateItem: (pid: string, quantity: number) => void;
+  getCart: () => ShoppingCart;
   clearCart: () => void;
   isLoading: boolean;
   isReady: boolean;
@@ -41,6 +42,23 @@ const initialStorage: CartStorage = [];
 
 const initialCart: ShoppingCart = [];
 
+const storageKey ='cart' as const;
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function getCartStorage(): CartStorage {
+  try {
+    const item = window.localStorage.getItem(storageKey);
+    if (!item) {
+      return initialStorage;
+    }
+    const jsonItem = JSON.parse(item);
+    return cartStorageSchema.parse(jsonItem);
+  } catch (error) {
+    window.localStorage.setItem(storageKey, JSON.stringify(initialStorage));
+    return initialStorage;
+  }
+}
+
 
 
 export function ShoppingCartContextProvider({
@@ -48,7 +66,7 @@ export function ShoppingCartContextProvider({
 }: ShoppingCartProviderProps) {
   const [cart, setCart] = useState<ShoppingCart>(initialCart);
   const [cartStorage, setCartStorage] = useLocalStorage(
-    "cart",
+    storageKey,
     cartStorageSchema,
     initialStorage
   );
@@ -67,13 +85,10 @@ export function ShoppingCartContextProvider({
     [setCartStorage]
   );
 
-  const updateCart = useCallback(
-    (newCart: ShoppingCart) => {
-      setCart(newCart);
-      saveCartToStorage(newCart);
-    },
-    [setCart, saveCartToStorage]
-  );
+  const updateCart =(newCart: ShoppingCart) => {
+    setCart([...newCart]);
+    saveCartToStorage(newCart);
+  }
 
   const totalAmount = useMemo(() => cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -88,6 +103,7 @@ export function ShoppingCartContextProvider({
 
 
   const addItem = (product: SimplifiedProduct, quantity: number) => {
+    // console.log("addItem",product,quantity)
     if (!isReady) return;
     const item = { ...product, quantity };
     const index = cart.findIndex((i) => i.pid === item.pid);
@@ -97,6 +113,7 @@ export function ShoppingCartContextProvider({
     } else {
       newCart[index].quantity += item.quantity;
     }
+    // console.log("newCart",newCart)
     updateCart(newCart);
   }
 
@@ -114,6 +131,11 @@ export function ShoppingCartContextProvider({
     updateCart(newCart);
   };
 
+  const getCart = () => {
+    if (!isReady) return [];
+    return cart;
+  }
+
   const clearCart = () => {
     if (!isReady) return;
     updateCart([]);
@@ -130,6 +152,7 @@ export function ShoppingCartContextProvider({
         addItem,
         removeItem,
         updateItem,
+        getCart,
         clearCart,
       }
     }>
@@ -138,6 +161,7 @@ export function ShoppingCartContextProvider({
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useShoppingCart = () => {
   const context = useContext(ShoppingCartContext);
   if (context == undefined) {

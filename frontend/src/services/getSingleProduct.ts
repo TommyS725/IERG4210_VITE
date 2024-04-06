@@ -1,5 +1,5 @@
 import { request } from "./core";
-import { productSchema } from "../models/products";
+import { productSchema } from "../models/product";
 import { queryOptions,useQuery } from "@tanstack/react-query";
 
 const baseQueryKey = ["product"];

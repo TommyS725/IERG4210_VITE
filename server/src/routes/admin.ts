@@ -1,17 +1,18 @@
 import { Hono } from "hono";
 import { serveStatic } from "@hono/node-server/serve-static";
 import fs from "fs";
-import { requireAdmin, setCsrfCookie } from "../lib/middleware.js";
+import { requireAdmin, requireSecure, setCsrfCookie } from "../lib/middleware.js";
 
 //base path = /admin
-const admin = new Hono();
-const adminHTML = fs.readFileSync("./admin/index.html", "utf-8");
+const adminPage = new Hono();
+const htmlPath = "./admin/index.html";
 
 
-admin.use(requireAdmin);
+adminPage.use(requireSecure)
+adminPage.use(requireAdmin);
 
 
-admin.use(
+adminPage.use(
   "/assets/*",
   requireAdmin,
   serveStatic({
@@ -20,7 +21,7 @@ admin.use(
   })
 );
 
-admin.use(
+adminPage.use(
     "/favicon.ico",
     serveStatic({
       root: "./admin",
@@ -28,6 +29,6 @@ admin.use(
     })
   )
 
-admin.get("*" ,requireAdmin,setCsrfCookie, (c) => c.html(adminHTML));
+adminPage.get("*" ,requireAdmin,setCsrfCookie,  (c) => c.html(fs.readFileSync(htmlPath, "utf-8"))  );
 
-export default admin;
+export default adminPage;

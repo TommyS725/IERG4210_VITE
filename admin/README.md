@@ -46,11 +46,11 @@ The admin panel will be availabe at <localhost:{port}>
 
 ### Features
 
-This admin panel provide create/update/delete operation to call the management API.
+This admin panel provide create/update/delete operation to call the management API, a table for viewing users' orders is also avaiable.
 Th server should be first running, and then login at frontend client to gain credidential.
 
 ### Possible Issues
-Since the category list automatically populate from DB,  
+Since the category list and user orders automatically populate from DB,  
 please check the server connection when encountering error from loading or any other requests.
 
 ### Dependences

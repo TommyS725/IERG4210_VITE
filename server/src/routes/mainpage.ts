@@ -3,7 +3,7 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import fs from "fs";
 import { setCsrfCookie } from "../lib/middleware.js";
 
-const indexHTML = fs.readFileSync("./client/index.html", "utf-8");
+const htmlPath = "./client/index.html";
 
 const mainpage = new Hono()
   .use(
@@ -18,5 +18,5 @@ const mainpage = new Hono()
       root: "./client",
     })
   )
-    .get("/*", setCsrfCookie,(c) => c.html(indexHTML));
+  .get("/*", setCsrfCookie, (c) =>  c.html(fs.readFileSync(htmlPath, "utf-8")));
 export default mainpage;

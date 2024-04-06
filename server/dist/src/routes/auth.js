@@ -2,12 +2,13 @@ import { Hono } from "hono";
 import Session from "../lib/session.js";
 import { db, schema } from "../db/client.js";
 import { z } from "zod";
-import { checkCsrf } from "../lib/middleware.js";
+import { checkCsrf, requireSecure } from "../lib/middleware.js";
 import { ClientError, expiresDate, FormValidator } from "../lib/utils.js";
 import { createHmac, randomBytes } from "crypto";
 import Cookies from "../lib/cookies.js";
 import { and, eq } from "drizzle-orm";
 const authHandler = new Hono();
+authHandler.use(requireSecure);
 authHandler.get("/profile", async (c) => {
     // return c.json({
     //   username: "test",

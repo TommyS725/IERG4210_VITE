@@ -11,4 +11,3 @@ const authStore = useAuthStore()
   <RouterView v-if="authStore.authorized" />
   <InitProfile v-else />
 </template>
-

@@ -13,6 +13,7 @@ input {
   color: rgb(46, 64, 94);
   font-size: 1.125rem;
   line-height: 1.75rem;
+  background-color: transparent;
 }
 
 textarea {
@@ -23,6 +24,8 @@ textarea {
   color: rgb(46, 64, 94);
   font-size: 1.125rem;
   line-height: 1.75rem;
+  background-color: transparent;
+
 }
 
 input:hover,

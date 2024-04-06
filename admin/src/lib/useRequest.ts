@@ -38,7 +38,6 @@ export default function useRequest(config: Config) {
       typeof config.pathParams === 'function' ? config.pathParams(data) : config.pathParams
     const url = getApiUrl(config.path, pathParam)
     message.value = ''
-    // console.log('url', url)
 
     try {
       isLoading.value = true

@@ -4,7 +4,7 @@ import { randomBytes } from "crypto";
 //three cookies are set in the browser
 //1. session cookie => SESSID, httpOnly, secure, sameSite, expires in 1 week
 //2. auth cookie => hashed(userId|expiryDate|password,salt), httpOnly, secure, sameSite, expires in 3 day
-//3. csrf cookie => CSRF token, to be read by javascript and set as hidden field in forms
+//3. csrf cookie => CSRF token, to be read by javascript and set as hidden field in forms, secure, sameSite, expires in the session
 class Cookies {
     static setSessionCookie(c, sessionId) {
         const expires = expiresDate(7);
@@ -41,6 +41,7 @@ class Cookies {
         const token = randomBytes(32).toString("hex");
         setCookie(c, "csrf", token, {
             sameSite: "Strict",
+            secure: true,
         });
     }
     static getCsrfCookie(c) {

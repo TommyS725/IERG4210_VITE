@@ -24,13 +24,13 @@ const logoutUrl = getApiUrl('auth/logout')
         <div class="space-x-2">
           <a
             href ="/"
-            class="mx-1 text-white font-semibold text-base underline-offset-1 hover:underline"
+            class="hover:font-bold hover:text-lg mx-1 text-white font-semibold text-base underline-offset-1 hover:underline"
             >Back</a
           >
           <span class="border-l-2" aria-hidden></span>
           <a
             :href="logoutUrl"
-            class=" text-white font-semibold text-base underline-offset-1 hover:underline"
+            class="hover:font-bold hover:text-lg text-white font-semibold text-base underline-offset-1 hover:underline"
             >Logout</a
           >
 

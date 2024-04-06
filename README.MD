@@ -1,4 +1,4 @@
-# 2024 Sem2 IERG4210 Assignment Phase 4
+# 2024 Sem2 IERG4210 Assignment Phase 5
 ## Shum Ching Chit 1155159019
 
 
@@ -7,6 +7,10 @@ This application is a shopping website built using React, Vue and Hono with Type
 
 ### Demo
 This application can be accessed at <https://secure.s12.ierg4210.ie.cuhk.edu.hk/>.
+
+### Before you start
+To use the PayPal function in frontend,you have to sign up for a PayPal developer account at <https://developer.paypal.com/dashboard/accounts> and set it as the enviornment of frontend as described[here](/frontend/README.md#enviornment-set-up).
+
 ### Developement
 #### Database
 Before running the application, a MySQL database and Redis sevrer is required. You can set it up locally or use Docker.
@@ -39,16 +43,8 @@ Before running the application, a MySQL database and Redis sevrer is required. Y
     This command starts a Redis container with the default configuration. It exposes the Redis server at the default port (6379).
 3. The MySQL and Redis database is now up and ready to use.
 
-#### Start development server
-In this step, Node.js is required.
-##### Client
-See [this section](/frontend/README.md#development) for details.
-##### Admin
-See [this section](/admin/README.md#development) for details.
-##### Client
-See [this section](/server/README.md#get-started) for details.
 
-##### Using Docker Compose
+##### Using Docker Compose (Recommended)**
 You can also use Docker Compose to create dev DB and images server by running
 ```sh
 docker-compose -f dev.yml up
@@ -58,52 +54,65 @@ By default,
 - Redis server  will be served at `localhost:6379`
 
 
+#### Start development server
+In this step, Node.js is required.
+##### Client
+See [this section](/frontend/README.md#development) for details.
+##### Admin
+See [this section](/admin/README.md#development) for details.
+##### Client
+See [this section](/server/README.md#get-started) for details.
+
+
 ### Production
 The production build can be served up locally or using Docker.
 #### **Local Deployment**
 1. Set up the databases and environment configuration following [this part](#database)
-2. Create production build
+2. Set up the server environment as described [here](./server/README.md#environment-set-up)
+3. Create production build
 ```sh
 cd server
 npm run build:all
 ```
-3. Link frontend and admin build under sever
+4. Link frontend and admin build under sever
 ```sh
 cd server 
 ln -s ../frontend/dist client
 ln -s ../admin/dist admin
 ```
-4. Start server
+5. Start server
 ```sh
 cs server
 npm run start
 ```
-5. Install Nginx
-6. Use the following nginx config
+6. Install Nginx
+7. Use the following nginx config in `./nginx/nginx.conf`
 ```conf
 server {
-    listen {port};
-    server_name {your_domain/public address};
-    server_tokens off;
-    proxy_hide_header X-Powered-By;
+    listen 80;
+    client_max_body_size 6M; 
 
     location / {
-        proxy_pass http://localhost:8080;
+        proxy_pass http://server:8080;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
+    location /images/ {
+        alias /usr/share/nginx/html/images/;
+    }
 }
 ```
-7. Start nginx by running
+8. Start nginx by running
 ```sh
 sudo service nginx start
 ```
 
-8. The application is now ready to use at `{port}`.
+9. The application is now ready to use at `{port}`.
 
 PS.  If you encounter permission issues in step 7, you may need to run the command with `sudo` or change the permission of the directories using `chmod` and `chown`.
 
@@ -125,18 +134,36 @@ depends_on:
 restart: on-failure
 ...
 ```
-2. Start the server by running
+2. If you are using HTTPS to serve, set `IS_DEV` in server section to `false`, if not set to `true`.
+```yml
+...
+ server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      args:
+        DB_URL: mysql://root:admin@db:3306/store
+        REDIS_HOST: redis
+    command: npm run setup:start
+    environment:
+      DB_URL: mysql://root:admin@db:3306/store
+      REDIS_HOST: redis
+      IS_DEV: 'false if using HTTPS else true'
+...
+```
+3. Start the server by running
 ```sh
 docker-compose up
 ```
-Server is started at <http://localhost:{port}>
-3. If you want to expose the application to the internet, you may need to configure a reverse proxy with Nginx or another web server on your host. For example, using the following config:
+Server is started at <http://localhost:{port}> (port is default to 3000)
+4. If you want to expose the application to the internet, you may need to configure a reverse proxy with Nginx or another web server on your host. For example, using the following config:
 ```conf
 server {
     listen 80;
     server_name {your_domain/public address};
     server_tokens off;
     proxy_hide_header X-Powered-By;
+    client_max_body_size 6M; 
 
     location / {
         proxy_pass http://server:{port};
@@ -145,10 +172,14 @@ server {
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Forwarded-Proto $scheme;
     }
 
 }
 ```
+
+### User Creation
+You can refer to this [section](./server/README.md#user-creation)
     
 
 ### Directory details
@@ -165,10 +196,12 @@ server {
     MySQL data for docker container
 
 - `./nginx`
-    Nginx config for docker compose
+    Nginx config files
+    - `app.conf`: Actual Nginx config at <https://secure.s12.ierg4210.ie.cuhk.edu.hk/>
+    - `nginx.conf`: Nginx config for basic loacal deployment and Docker Compose
 
 - `./data`
-    Typescript database items records and imges.
+    Typescript database items records, images, user data and database dump.
 
 
 

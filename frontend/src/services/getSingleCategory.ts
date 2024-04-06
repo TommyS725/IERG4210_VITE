@@ -4,21 +4,25 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 
 const baseQueryKey = ["category"];
 
-const queryFn = (cid: string) => request({
+type OnError = (error: unknown) => undefined;
+
+const queryFn = (cid: string,onError?:OnError) => request({
   path: `categories/${cid}`,
   schema: categorySchema,
+  onError,
+  
 });
 
 
-export const singleCategoryQueryOptions = (cid: string) => queryOptions({
+export const singleCategoryQueryOptions = (cid: string,onError?:OnError) => queryOptions({
   queryKey: [...baseQueryKey, cid],
-  queryFn: () => queryFn(cid),
+  queryFn: () => queryFn(cid,onError),
 });
 
 
 
-export function useSingleCategoryQuery(cid: string) {
+export function useSingleCategoryQuery(cid: string,onError?:OnError) {
 
-  const option = singleCategoryQueryOptions(cid);
+  const option = singleCategoryQueryOptions(cid,onError);
   return useQuery(option);
 }

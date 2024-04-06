@@ -76,6 +76,10 @@ function Login() {
         setError("Invalid email or password")
         return { message: "Invalid email or password" }
       }
+      if(res.status === 426){
+        setError("Login only available in secure connection. Please upgrade to HTTPS abd secure connection.")
+        return { message: "Upgrade Required" }
+      }
       if(res.status === 400){
         //invalid email or password parsing, but probably error om csrf token
         window.location.href = '/login'
@@ -87,7 +91,7 @@ function Login() {
       }
     }
     if (error instanceof ZodError) {
-      console.log('error',error)
+      // console.log('error',error)
       return { message: "Invalid Response Struct" }
     }
     throw error
@@ -112,7 +116,7 @@ function Login() {
 
 
 return (
-  <div className='auth  w-full min-h-[75vh] grid justify-center items-center'>
+  <main className='auth  w-full min-h-[75vh] grid justify-center items-center'>
     <form className=' card min-h-[65vh] min-w-[75vw] text-slate-900' onSubmit={mutate} 
     >
       <h1 className='text-3xl font-bold'>Login</h1>
@@ -124,7 +128,7 @@ return (
           <input
             type='email'
             name="email"
-            placeholder='a@example.com'
+            placeholder='user123@example.com'
             required
           />
         </div>
@@ -169,6 +173,6 @@ return (
         </div>
       </div>
     </form>
-  </div>
+  </main>
 )
 }

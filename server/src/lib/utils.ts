@@ -19,7 +19,13 @@ export class FormValidator{
   static errorRespone = (c:Context)=>c.text("Invalid form data", 400);
 }
 
-
+export class BodyValidator{
+  static parse = async <T>(c:Context, schema:z.ZodSchema<T>) => {
+    const obj = await c.req.json();
+    return schema.safeParse(obj);
+  }
+  static errorRespone = (c:Context)=>c.text("Invalid body data", 400);
+}
 
 export const validationCallBack = {
   query: (result: R, c: C) => {
@@ -88,6 +94,11 @@ export class ClientError{
     c.status(400);
     return c.text("Bad Request");
   }
+
+  static upgradeRequired = (c: Context) => {
+    c.status(426);
+    return c.text("Upgrade Required");
+  }
 }
 
 export function expiresDate(days: number) {
@@ -103,3 +114,18 @@ export const  hashAuthToken = (userId:string,authExpiry:number,hpassword:string,
 }
 
 
+
+export function stringArrayEqual(a:string[],b:string[]){
+  a.sort();
+  b.sort();
+  if(a.length!==b.length){
+    return false;
+  
+  }
+  for(let i=0;i<a.length;i++){
+    if(a[i]!==b[i]) {
+      return false;
+    }
+  }
+  return true;
+}

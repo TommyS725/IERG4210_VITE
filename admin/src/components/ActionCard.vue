@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import type { Table } from '@/types/db'
 import { operations, type OperationType } from '@/types/operations'
-import { defineProps } from 'vue'
 import { capitalize } from '@/lib/utils'
 import OperationIcon from './OperationIcon.vue'
 
 type Props = {
-  table: Table
   operationType: OperationType
+  table: Table
 }
 
 const { operationType, table } = defineProps<Props>()

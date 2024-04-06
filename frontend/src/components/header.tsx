@@ -8,7 +8,7 @@ import UserProfile from "./userProfile";
 const ignore_cart_routes = ['login','reset_password']
 
 
-const Header:FC =()=>{
+const TopHeader:FC =()=>{
     const showCart = !ignore_cart_routes.includes(window.location.pathname.split('/')[1])
 
     return(
@@ -26,4 +26,4 @@ const Header:FC =()=>{
     )
 }
 
-export default Header;
+export default TopHeader;

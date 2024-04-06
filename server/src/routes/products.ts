@@ -13,7 +13,7 @@ import {
   saveImage,
   validationCallBack,
 } from "../lib/utils.js";
-import { checkAdminAuthToken } from "../lib/middleware.js";
+import { checkAdminAuthToken, requireSecure } from "../lib/middleware.js";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ALLOWED_MIME_TYPES = [
@@ -23,7 +23,7 @@ const ALLOWED_MIME_TYPES = [
   "image/gif",
 ];
 
-const productsRoute = new Hono();
+const productsHandler = new Hono();
 
 const {products} = schema
 
@@ -34,7 +34,7 @@ const getProductQuerySchema = paginationSchema.extend({
 
 
 //get all products
-productsRoute.get(
+productsHandler.get(
   "/",
   zValidator("query", getProductQuerySchema,validationCallBack.query),
   async (c) => {
@@ -60,7 +60,7 @@ productsRoute.get(
 );
 
 // get a product by id
-productsRoute.get("/:pid", async (c) => {
+productsHandler.get("/:pid", async (c) => {
   const pid = c.req.param("pid");
   const rows = await db
     .select()
@@ -76,7 +76,8 @@ productsRoute.get("/:pid", async (c) => {
 
 
 //data modification routes
-productsRoute.use(checkAdminAuthToken);
+productsHandler.use(requireSecure);
+productsHandler.use(checkAdminAuthToken);
 
 const postProductSchema = z.object({
   name: z.string(),
@@ -87,7 +88,7 @@ const postProductSchema = z.object({
 });
 
 // create a new product
-productsRoute.post(
+productsHandler.post(
   "/",
   async (c) => {
     const parse = await FormValidator.parse(c, postProductSchema);
@@ -147,7 +148,7 @@ const putProductSchema = z.object({
 });
 
 // update a product
-productsRoute.put(
+productsHandler.put(
   "/:pid",
   async (c) => {
     const parse = await FormValidator.parse(c, putProductSchema);
@@ -297,15 +298,66 @@ productsRoute.put(
   }
 );
 
+
 /**
- * Delete a product
+ * Delete a product by name
  * *Image of the product will be deleted if the query parameter `deleteFile` is not set to `false`
  * *Even if the image is not deleted successfullly, the database record will be deleted
  */
-productsRoute.delete("/:pid", async (c) => {
+
+productsHandler.delete("/name/:pname", async (c) => {
+  const pname = c.req.param("pname");
+  if(!pname){
+    return c.text("Product name is required", 400);
+  }
+  const needToDeleteFile = c.req.query("deleteFile")?.toLowerCase() !== "false";
+  let toDelete: string | undefined = undefined;
+
+  //find the image to delete
+  if (needToDeleteFile) {
+    const data = await db.query.products.findFirst({
+      columns: {
+        image: true,
+      },
+      where: eq(products.name, pname),
+    });
+    toDelete = data?.image;
+  }
+
+  try {
+    //perform delete
+    const res = await db.delete(products).where(eq(products.name, pname));
+    const affectedRows = res[0].affectedRows;
+
+    if (affectedRows === 0) {
+      return c.text("Product not found", 404);
+    }
+
+    //delete image
+    if (toDelete) {
+      await deleteFile(toDelete);
+    }
+
+    return c.body(null, 204);
+  } catch (error: any) {
+    const message = error.message ?? "Unknown error";
+    return c.text(message, 400);
+  }
+});
+
+
+/**
+ * Delete a product by pid
+ * *Image of the product will be deleted if the query parameter `deleteFile` is not set to `false`
+ * *Even if the image is not deleted successfullly, the database record will be deleted
+ */
+productsHandler.delete("/:pid", async (c) => {
   const pid = c.req.param("pid");
   const needToDeleteFile = c.req.query("deleteFile")?.toLowerCase() !== "false";
   let toDelete: string | undefined = undefined;
+  if(!pid){
+    return c.text("Product id is required", 400);
+  }
 
   //find the image to delete
   if (needToDeleteFile) {
@@ -339,4 +391,4 @@ productsRoute.delete("/:pid", async (c) => {
   }
 });
 
-export default productsRoute;
+export default productsHandler;

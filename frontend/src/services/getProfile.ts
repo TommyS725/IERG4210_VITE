@@ -10,7 +10,7 @@ const queryFn = () => request({
   schema: userProfileSchema,
   onError: (error) => {
      if(!(error instanceof AxiosError)) throw error;
-     if(error.response?.status === 404) return null;
+     if(error.response?.status === 404 || error.response?.status === 426) return null;
     throw error;
   },
 });

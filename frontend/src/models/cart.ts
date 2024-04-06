@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { productSchema } from "./products";
+import { productSchema } from "./product";
 
 const pidSchema = productSchema.shape.pid;
 const qunaitySchema = z.number().int().positive();

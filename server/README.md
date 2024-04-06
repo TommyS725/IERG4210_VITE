@@ -14,10 +14,12 @@ ln -s ../frontend/dist client
 ln -s ../admin/dist admin
 ```
 
-#### Create  `.env ` file
+#### Enviorment set up
+Create  `.env ` file
 ```ini
 DB_URL = 'mysql2://{user}:{password}@{host}:{port}/{database}'
 REDIS_HOAT ='eg. localhost'
+IS_DEV = 'if you are NOT using HTTPS to server, set this to "true" otherwise leave it empty'
 ```
 
 
@@ -58,6 +60,20 @@ docker run --name {container-name} -p {port}:8080 {imaage-name}
 ```
 Replace {image-name}, {port} and {container-name} with the actual value.
     The admin panel will be availabe at <localhost:{port}>
+
+
+### User Creation
+1. You need:
+   - A valid email
+   - A username that is at least 1 character long
+   - A non-empty password
+2. Generate a 16-byte salt.
+3. Create a SHA-256 HMAC using the salt and the password to create a hashed password.
+4. Generate a new random UUID for the user ID.
+5. Create the user using the following statement in the MySQL console:
+```bash
+INSERT INTO users (userid, email, username, hpassword, salt, admin) VALUES ('${userid}', '${email}', '${username}', '${hashed_password}', '${salt}', ${isAdmin (true/false)});
+```
 
 
 

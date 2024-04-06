@@ -3,18 +3,32 @@
 ## Overview
 This is the frontend client for shopping website built by React.
 
-## Installation
-Require NodeJS
-### Development
-1. Create a env file with working api server (default to be <http://localhost:8080>)
+## Important
+You have to disable uBlock origin to access PayPal function sucessfully. 
+
+## PayPal sign up
+You have to sign up for a PayPal developer account at <https://developer.paypal.com/dashboard/accounts>.
+
+## Enviornment set up
+Create a env file with thefollowings, you can also refer to `.env.example`.
+1. A working API server (by default, this is set to <http://localhost:8080>. Note: This is not used or required when using Docker Compose).
+2. Your PayPal client id (required)
 ```ini
 API_SERVER='API server URL'
+VITE_PAYPAL_CLIENT_ID='your PayPal client id'
 ```
-2. Install dependences
+
+
+## Installation
+Require NodeJS
+
+### Development
+
+1. Install dependences
 ```sh
 npm i
 ```
-3. Start the dev server
+2. Start the dev server
 ```sh
 npm run dev
 ```
@@ -31,7 +45,7 @@ npm run build
 ```sh
 npm run preview
 ```
-The admin panel will be availabe at <localhost:3001>
+The fronted client will be availabe at <localhost:3001>
 
 #### Using Docker container
 Build and run a Docker container in this directory by running
@@ -40,7 +54,7 @@ docker build -t {image-name} .
 docker run --name {container-name} -p {port}:3000 {imaage-name}
 ```
 Replace {image-name}, {port} and {container-name} with the actual value.
-The admin panel will be availabe at <localhost:{port}>
+The fronted client will be availabe at <localhost:{port}>
 
 ### Features
 
@@ -50,6 +64,8 @@ Shopping cart can be displayed by hovering the cart icon. Input boxes are avaiab
 The product pages cam be navigated by clicking the thumbnail or product name.
 
 A hierarchical navigation menu is avaiable at the top of home page, category pages and product pages, the links can be used to navigate between routes.
+
+Checkout and user features are availabe at the top header bar.
 
 
 

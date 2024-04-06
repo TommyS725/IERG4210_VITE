@@ -3,7 +3,7 @@ import { createFileRoute, } from "@tanstack/react-router";
 import NavBar from "../../components/navbar";
 
 import { useEditTitle } from "../../utils/title";
-import { Product } from "../../models/products";
+import { Product } from "../../models/product";
 import { FC } from "react";
 import AddToCart from "../../components/shopping-cart/addToCart";
 import { FullImage } from "../../components/images";

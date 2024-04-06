@@ -9,6 +9,13 @@ export class FormValidator {
     };
     static errorRespone = (c) => c.text("Invalid form data", 400);
 }
+export class BodyValidator {
+    static parse = async (c, schema) => {
+        const obj = await c.req.json();
+        return schema.safeParse(obj);
+    };
+    static errorRespone = (c) => c.text("Invalid body data", 400);
+}
 export const validationCallBack = {
     query: (result, c) => {
         if (!result.success) {
@@ -72,6 +79,10 @@ export class ClientError {
         c.status(400);
         return c.text("Bad Request");
     };
+    static upgradeRequired = (c) => {
+        c.status(426);
+        return c.text("Upgrade Required");
+    };
 }
 export function expiresDate(days) {
     const date = new Date();
@@ -83,3 +94,16 @@ export const hashAuthToken = (userId, authExpiry, hpassword, salt) => {
     const unhashed = `${userId}${authExpiry}${hpassword}`;
     return hash.update(unhashed).digest("hex");
 };
+export function stringArrayEqual(a, b) {
+    a.sort();
+    b.sort();
+    if (a.length !== b.length) {
+        return false;
+    }
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+}

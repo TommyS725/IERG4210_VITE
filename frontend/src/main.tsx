@@ -11,7 +11,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { RouterContext } from "./utils/utils_types";
 import { UserContextProvider } from "./context/UserContext";
 
-
 //react query client
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,6 +28,11 @@ const routerContext = {
 const router = createRouter({
   routeTree,
   context: routerContext,
+  notFoundMode: "root",
+  defaultNotFoundComponent: () => <div className="h-[80vh] flex justify-center align-middle items-center">
+    <h1 className="text-4xl font-bold">404 Not Found</h1>
+  </div>
+
 });
 
 // Register the router instance for type safety
@@ -37,6 +41,8 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+
+
 
 // Render the app
 const rootElement = document.getElementById("root")!;

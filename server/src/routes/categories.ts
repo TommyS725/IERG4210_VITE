@@ -4,26 +4,26 @@ import { set, z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { eq } from "drizzle-orm";
 import { FormValidator, validationCallBack } from "../lib/utils.js";
-import { checkAdminAuthToken } from "../lib/middleware.js";
+import { checkAdminAuthToken, requireSecure } from "../lib/middleware.js";
 
-const categories = new Hono();
+const categoriesHandler = new Hono();
 
 //get all categories
-categories.get("/", async (c) => {
+categoriesHandler.get("/", async (c) => {
   const data = await db.select().from(schema.categories);
   return c.json(data, 200);
   // return c.json(dummy_categories, 200)
 });
 
 // get a category by id
-categories.get("/:cid", async (c) => {
+categoriesHandler.get("/:cid", async (c) => {
   const cid = c.req.param("cid");
   const rows = await db
     .select()
     .from(schema.categories)
     .where(eq(schema.categories.cid, cid));
   const data = rows[0];
-  // const data = dummy_categories.filter((c) => c.cid === cid)[0]
+  // const data = dummy_categoriesHandler.filter((c) => c.cid === cid)[0]
   if (!data) {
     return c.text("Category not found", 404);
   }
@@ -32,8 +32,9 @@ categories.get("/:cid", async (c) => {
 
 
 //data modification routes
+categoriesHandler.use(requireSecure)
 
-categories.use(checkAdminAuthToken);
+categoriesHandler.use(checkAdminAuthToken);
 
 
 const postCategorySchema = z.object({
@@ -41,7 +42,7 @@ const postCategorySchema = z.object({
 });
 
 // create a new category
-categories.post(
+categoriesHandler.post(
   "/",
   async (c) => {
     const parse = await FormValidator.parse(c, postCategorySchema);
@@ -65,7 +66,7 @@ const putCategorySchema = z.object({
 });
 
 // update a category
-categories.put(
+categoriesHandler.put(
   "/:cid",
   async (c) => {
     const cid = c.req.param("cid");
@@ -91,7 +92,7 @@ categories.put(
 );
 
 // delete a category by name
-categories.delete(
+categoriesHandler.delete(
   "/",
   zValidator("query", z.object({ name: z.string() }), validationCallBack.query),
   async (c) => {
@@ -114,7 +115,7 @@ categories.delete(
 );
 
 // delete a category by cid
-categories.delete("/:cid", async (c) => {
+categoriesHandler.delete("/:cid", async (c) => {
   const cid = c.req.param("cid");
   try {
     const res = await db.delete(schema.categories).where(eq(schema.categories.cid, cid));
@@ -130,4 +131,4 @@ categories.delete("/:cid", async (c) => {
   }
 });
 
-export default categories;
+export default categoriesHandler;

@@ -1,8 +1,8 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-import { Link, createFileRoute,  useNavigate } from "@tanstack/react-router";
+import { Link,createFileRoute,   useNavigate } from "@tanstack/react-router";
 import NavBar from "../../components/navbar";
-import { SimplifiedProduct } from "../../models/products";
+import { SimplifiedProduct } from "../../models/product";
 import { useEditTitle } from "../../utils/title";
 import AddToCart from "../../components/shopping-cart/addToCart";
 import { Thumbnail } from "../../components/images";
@@ -12,11 +12,12 @@ import { useInfiniteProductsQuery } from "../../services/getInfiniteProducts";
 import { Loader2 } from "lucide-react";
 import { useIntersection } from "@mantine/hooks";
 import { ElementRef, useEffect, forwardRef } from "react";
+import { AxiosError } from "axios";
 
 const PAGE_SIZE = 3 as const;
 
 const searchSchema = z.object({
-  cid: z.string().optional(),
+  cid: z.coerce.string().optional(),
 });
 
 export const Route = createFileRoute("/__withList/")({
@@ -77,11 +78,16 @@ type NavWithCidProps = {
 
 function NavWithCid({ cid }: NavWithCidProps) {
   const baseNav = { name: "Home", path: "/" };
-  const { data: category ,isError} = useSingleCategoryQuery(cid);
-  if (!category && isError) {
-    window.location.href = "/404";
-  }
-  
+  const navigate = useNavigate({ from: "/" });
+  const { data: category } = useSingleCategoryQuery(cid,(err:unknown)=>{
+    if(err instanceof AxiosError){
+      if(err.response?.status===404){
+        navigate({to:"/notFound"})
+      }
+    }
+  });
+
+ 
   return (
     <NavBar
       navItems={[
@@ -89,7 +95,7 @@ function NavWithCid({ cid }: NavWithCidProps) {
           ...baseNav,
           active: false,
         },
-        { name: category?.name??"Category", path: `/?cid=${cid}`, active: true },
+        { name: category?.name??"Unknown", path: `/?cid=${cid}`, active: true },
       ]}
     />
   );

@@ -10,7 +10,7 @@ const store = useAuthStore()
 const profileUrl = getApiUrl('auth/profile')
 
 const redirect = () => {
-  // window.location.href = '/login/'
+  window.location.replace('/login')
 }
 
 store.startLoading()

@@ -19,3 +19,5 @@ export type Operations = typeof operations
 export type OperationType = keyof Operations
 
 export type Operation = Operations[OperationType]
+
+export type CustomOperationType = 'view'
