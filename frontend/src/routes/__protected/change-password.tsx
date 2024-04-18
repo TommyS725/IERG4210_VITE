@@ -111,7 +111,7 @@ function ResetPw() {
         return { message: "Session expired" }
       }
       if(res.status === 426){
-        setError("Login only available in secure connection. Please upgrade to HTTPS abd secure connection.")
+        setError("Login only available in secure connection. Please upgrade to HTTPS and secure connection.")
         return { message: "Upgrade Required" }
       }
       if(res.status === 400){
