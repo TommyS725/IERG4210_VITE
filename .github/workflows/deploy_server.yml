@@ -70,12 +70,12 @@ jobs:
                 script: |
                   cd /var/www/server
                   tar -xzvf server.tar.gz
-                  if ! screen -list | grep -q "${{ secrets.SCREEN }}"; then
-                    screen -dmS ${{ secrets.SCREEN }}
+                  if ! screen -list | grep -q "server"; then
+                    screen -dmS server
                   fi
-                  screen -S ${{ secrets.SCREEN }} -X stuff "^C"
-                  screen -S ${{ secrets.SCREEN }} -X stuff "cd /var/www/server\n"
-                  screen -S ${{ secrets.SCREEN }} -X stuff " yarn install --production && yarn start\n"
+                  screen -S server -X stuff "^C"
+                  screen -S server -X stuff "cd /var/www/server\n"
+                  screen -S server -X stuff " yarn install --production && yarn start\n"
 
 
 
