@@ -5,8 +5,17 @@
 ### Overview
 This application is a shopping website built using React, Vue and Hono with TypeScript.
 
-### ~~Demo~~
-~~This application can be accessed at <https://secure.s12.ierg4210.ie.cuhk.edu.hk/>~~
+### Demo
+This application can be accessed at <https://shop-demo.tommyshum.com/>
+
+##### Demo User Account (for login):
+- Email: demo@tommyshum.com
+- Password: demo@Tommyshum
+
+##### Demo Paypal Account (for purchase):
+- Email: sb-lgoet30236865@personal.example.com
+- Password: Y.1.sWw5
+
 
 ### Before you start
 To use the PayPal function in frontend,you have to sign up for a PayPal developer account at <https://developer.paypal.com/dashboard/accounts> and set it as the enviornment of frontend as described [here](/frontend/README.md#enviornment-set-up).
@@ -177,6 +186,9 @@ server {
 
 }
 ```
+
+### Auto Deploy
+This repo uses Github actions to deploy updated builds by `scp` and `ssh`.
 
 ### User Creation
 You can refer to this [section](./server/README.md#user-creation)

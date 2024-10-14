@@ -13,8 +13,9 @@ function Footer() {
         <div>By: Tommy Shum </div>
         <div>Contact: <a href={"mailto:" + contact_mail} className=' underline  cursor-pointer'>{contact_mail}</a></div>
         <div>
-            <a href= {github_link} target="_blank" className='underline cursor-pointer'>
-                <GitHubIcon  />
+            <a href= {github_link} target="_blank" className='cursor-pointer grid grid-cols-2 items-center '>
+                <GitHubIcon  />  
+                <span className=" -mx-16 hover:underline">Check demo credientials @Repo</span>
             </a>
         </div>
     </footer>

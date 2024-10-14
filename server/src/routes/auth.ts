@@ -8,6 +8,10 @@ import { createHmac, randomBytes } from "crypto";
 import Cookies from "../lib/cookies.js";
 import { and, eq } from "drizzle-orm";
 
+const DEMO_USER_EMAILS = [
+  "demo.user@tommyshum.com",
+]
+
 const authHandler = new Hono();
 
 authHandler.use(requireSecure);
@@ -110,6 +114,11 @@ authHandler.put("change-password", checkCsrf, async (c) => {
   if (!user || user.email !== email) {
     await Session.clearSession(c);
     return ClientError.unauthorized(c);
+  }
+
+  if(DEMO_USER_EMAILS.includes(email)){
+    c.status(400);
+    return c.text("Demo user");
   }
   const { hpassword, salt } = user;
   const hash = createHmac("sha256", salt);

@@ -117,9 +117,15 @@ function ResetPw() {
       if(res.status === 400){
         const text = await res.text()
         const isUnmatchedOldPassword = "Original password is incorrect" === text
+        //check if the user is a demo user NOT open for password change
+        const isDemoUser = "Demo user" === text
         if(isUnmatchedOldPassword){
           setError("Original password is incorrect")
           return { message: "Old password is incorrect" }
+        }
+        if(isDemoUser){
+          setError("Password matched. But demo user cannot change password.")
+          return { message: "Demo user" }
         }
         //invalid patload parsing, but probably error om csrf token
         window.location.href = '/change-password'
