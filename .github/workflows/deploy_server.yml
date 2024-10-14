@@ -30,6 +30,35 @@ jobs:
               run: tar -czvf server.tar.gz  ./*.js ./package.json  dist 
               working-directory: ./server
 
+            - name: SCP server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                host: ${{ secrets.HOST }}
+                username: ${{ secrets.USERNAME }}
+                key: ${{ secrets.KEY }}
+                source: "server/server.tar.gz"
+                target: "/var/www/server"
+                strip_components: 1
+                
+            - name: SSH -> Remove old FE builds ->  Unzip server -> Restart server
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                host: ${{ secrets.HOST }}
+                username: ${{ secrets.USERNAME }}
+                key: ${{ secrets.KEY }}
+                script: |
+                  cd /var/www
+                  rm -r client/*
+                  rm -r admin/*
+                  cd server
+                  tar -xzvf server.tar.gz
+                  if ! screen -list | grep -q "server"; then
+                  screen -dmS server
+                  fi
+                  screen -S server -X stuff "^C"
+                  screen -S server -X stuff "cd /var/www/server\n"
+                  screen -S server -X stuff " yarn install --production && yarn start\n"
+              
             - name: SCP frontend
               uses: appleboy/scp-action@v0.1.7
               with:
@@ -49,34 +78,6 @@ jobs:
                   source: "admin/dist/*"
                   target: "/var/www/admin"
                   strip_components: 2
-
-
-            - name: SCP server
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.KEY }}
-                  source: "server/server.tar.gz"
-                  target: "/var/www/server"
-                  strip_components: 1
-                  
-            - name: SSH -> Unzip server -> Restart server
-              uses: appleboy/ssh-action@v1.1.0
-              with:
-                host: ${{ secrets.HOST }}
-                username: ${{ secrets.USERNAME }}
-                key: ${{ secrets.KEY }}
-                script: |
-                  cd /var/www/server
-                  tar -xzvf server.tar.gz
-                  if ! screen -list | grep -q "server"; then
-                    screen -dmS server
-                  fi
-                  screen -S server -X stuff "^C"
-                  screen -S server -X stuff "cd /var/www/server\n"
-                  screen -S server -X stuff " yarn install --production && yarn start\n"
-
 
 
       
