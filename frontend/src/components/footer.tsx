@@ -17,8 +17,8 @@ function Footer() {
             </a>
         </div>
         <div className=" ">Contact: <a href={"mailto:" + contact_mail} className=' underline  cursor-pointer'>{contact_mail}</a></div>
-        <div className=" flex items-center  ajustify-end cursor-pointer">
-            <a href={repo_link} target="_blank" >
+        <div className=" ">
+            <a href={repo_link} target="_blank" className="flex items-center  ajustify-end cursor-pointer" >
                 <GitHubIcon />
                 <span className="  hover:underline">Check demo credientials @Repo</span>
             </a>
