@@ -20,8 +20,8 @@ function Footer() {
         <div className=" flex items-center  ajustify-end cursor-pointer">
             <a href={repo_link} target="_blank" >
                 <GitHubIcon />
+                <span className="  hover:underline">Check demo credientials @Repo</span>
             </a>
-            <span className="  hover:underline">Check demo credientials @Repo</span>
         </div>
     </footer>
 }
