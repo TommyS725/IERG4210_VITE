@@ -20,3 +20,6 @@ bun.lockb
 
 # archives and not be submitted to the repository
 archive.*
+
+# action secrets
+.secrets

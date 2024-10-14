@@ -1,0 +1,82 @@
+name: Deploy
+
+on:
+    push:
+        branches:
+            - main
+       
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Build Main Page 
+              run: npm ci && npm run build
+              working-directory: ./frontend
+            
+            - name: Build Admin Page
+              run: npm ci && npm run build
+              working-directory: ./admin
+            
+            - name: Build Server
+              run: npm ci && npm run build
+              working-directory: ./server
+
+            - name: Compress server
+              run: tar -czvf server.tar.gz  ./*.js ./package.json  dist 
+              working-directory: ./server
+
+            - name: SCP frontend
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  source: "frontend/dist/*"
+                  target: "/var/www/client"
+                  strip_components: 2
+
+            - name: SCP admin
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  source: "admin/dist/*"
+                  target: "/var/www/admin"
+                  strip_components: 2
+
+
+            - name: SCP server
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.KEY }}
+                  source: "server/server.tar.gz"
+                  target: "/var/www/server"
+                  strip_components: 1
+                  
+            - name: SSH -> Unzip server -> Restart server
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                host: ${{ secrets.HOST }}
+                username: ${{ secrets.USERNAME }}
+                key: ${{ secrets.KEY }}
+                script: |
+                  cd /var/www/server
+                  tar -xzvf server.tar.gz
+                  if ! screen -list | grep -q "${{ secrets.SCREEN }}"; then
+                    screen -dmS ${{ secrets.SCREEN }}
+                  fi
+                  screen -S ${{ secrets.SCREEN }} -X stuff "^C"
+                  screen -S ${{ secrets.SCREEN }} -X stuff "cd /var/www/server\n"
+                  screen -S ${{ secrets.SCREEN }} -X stuff " yarn install --production && yarn start\n"
+
+
+
+      

@@ -11,8 +11,8 @@ if (!DB_URL) {
 export default {
   schema: "./src/db/schema.ts",
   out: "./drizzle",
-  driver: 'mysql2',
+  dialect:'mysql',
   dbCredentials: {
-    uri: DB_URL
+    url: DB_URL
   }
 } satisfies Config;

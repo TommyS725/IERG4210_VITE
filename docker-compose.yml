@@ -37,7 +37,7 @@ services:
     environment:
       DB_URL: mysql://root:admin@db:3306/store
       REDIS_HOST: redis
-      IS_DEV: 'true'
+      REQ_SSL: 'false'
     volumes:
       - ./server/images:/app/images
       - client:/app/client

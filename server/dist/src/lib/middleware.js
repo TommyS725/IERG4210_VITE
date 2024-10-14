@@ -5,7 +5,7 @@ import { db } from "../db/client.js";
 import { ClientError, hashAuthToken } from "./utils.js";
 import dotenv from "dotenv";
 dotenv.config();
-const is_dev = process.env.IS_DEV === "true";
+const ssl = process.env.REQ_SSL === "true";
 export const checkCsrf = createMiddleware(async (c, next) => {
     const csrfToken = Cookies.getCsrfCookie(c);
     if (!csrfToken || csrfToken === "") {
@@ -72,7 +72,7 @@ export const setCsrfCookie = createMiddleware(async (c, next) => {
     await next();
 });
 export const requireSecure = createMiddleware(async (c, next) => {
-    if (is_dev)
+    if (!ssl)
         return await next();
     const protocol = c.req.header("x-forwarded-proto");
     // console.log("protocol", protocol);

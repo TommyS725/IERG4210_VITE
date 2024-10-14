@@ -2,8 +2,12 @@ import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import type { Context } from "hono";
 import { expiresDate, hashAuthToken } from "./utils.js";
 import { randomBytes } from "crypto";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 
+const ssl = process.env.REQ_SSL === "true";
 
 //three cookies are set in the browser
 //1. session cookie => SESSID, httpOnly, secure, sameSite, expires in 1 week
@@ -16,7 +20,7 @@ class Cookies {
     const expires = expiresDate(7);
     setCookie(c, "SESSID", sessionId, {
       httpOnly: true,
-      secure: true,
+      secure: ssl,
       sameSite: "Strict",
       expires,
     });
@@ -40,7 +44,7 @@ class Cookies {
     const token = hashAuthToken(userId, expTs, hpassword, salt);
     setCookie(c, "auth", token, {
       httpOnly: true,
-      secure:true,
+      secure:ssl,
       sameSite: "Strict",
       expires,
     });
@@ -57,7 +61,7 @@ class Cookies {
     const token = randomBytes(32).toString("hex");
     setCookie(c, "csrf", token, {
       sameSite: "Strict",
-      secure: true,
+      secure: ssl,
     });
   }
   static getCsrfCookie(c: Context) {

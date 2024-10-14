@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 
-const is_dev = process.env.IS_DEV === "true";
+const ssl = process.env.REQ_SSL === "true";
 
 export const checkCsrf = createMiddleware(async (c, next) => {
   const csrfToken = Cookies.getCsrfCookie(c);
@@ -23,7 +23,7 @@ export const checkCsrf = createMiddleware(async (c, next) => {
       console.log("csrf token mismatch for ", c.req.path);
       return ClientError.badRequest(c);
     }
-    console.log("csrf token match for ", c.req.path);
+    // console.log("csrf token match for ", c.req.path);
     await next();
   } catch (error) {
     return ClientError.badRequest(c);
@@ -83,7 +83,7 @@ export const setCsrfCookie = createMiddleware(async (c, next) => {
 
 
 export const requireSecure = createMiddleware(async (c, next) => {
-  if(is_dev) return await next();
+  if(!ssl) return await next();
   const protocol = c.req.header("x-forwarded-proto");
   // console.log("protocol", protocol);
   if(protocol === "https") return await next();

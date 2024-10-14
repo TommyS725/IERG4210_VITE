@@ -41,7 +41,7 @@ app.use("/images/*", serveStatic({
 
 
 //logging
-app.use(logger());
+// app.use(logger());
 
 
 // cors

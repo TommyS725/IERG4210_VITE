@@ -11,7 +11,7 @@ if (!DB_URL) {
 }
 
 
-const connection = await mysql.createConnection({
+const connection = mysql.createPool({
     uri: DB_URL,
 });
 
