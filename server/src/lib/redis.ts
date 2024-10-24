@@ -76,6 +76,8 @@ class Redis {
     await client.del(key);
   };
 
+  static checkHealth = () => client.ping();
+
 }
 
 

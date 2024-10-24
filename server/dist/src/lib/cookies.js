@@ -44,7 +44,7 @@ class Cookies {
         const token = randomBytes(32).toString("hex");
         setCookie(c, "csrf", token, {
             sameSite: "Strict",
-            secure: true,
+            secure: ssl,
         });
     }
     static getCsrfCookie(c) {

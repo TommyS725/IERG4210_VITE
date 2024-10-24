@@ -1,0 +1,11 @@
+.github
+admin-remote
+data
+images
+mysql
+nginx
+scripts
+*/node_modules
+*/dist
+server/images
+*/.env

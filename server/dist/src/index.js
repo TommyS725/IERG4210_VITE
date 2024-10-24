@@ -1,6 +1,5 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { logger } from "hono/logger";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { cors } from "hono/cors";
 //routes
@@ -25,7 +24,7 @@ app.use("/images/*", serveStatic({
     rewriteRequestPath: (path) => path.replace(/^\/images/, ""),
 }));
 //logging
-app.use(logger());
+// app.use(logger());
 // cors
 if (isDev) {
     app.use(cors());

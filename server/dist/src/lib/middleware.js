@@ -19,7 +19,7 @@ export const checkCsrf = createMiddleware(async (c, next) => {
             console.log("csrf token mismatch for ", c.req.path);
             return ClientError.badRequest(c);
         }
-        console.log("csrf token match for ", c.req.path);
+        // console.log("csrf token match for ", c.req.path);
         await next();
     }
     catch (error) {

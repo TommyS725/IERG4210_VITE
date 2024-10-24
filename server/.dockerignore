@@ -10,3 +10,5 @@ bs-config.cjs
 admin
 client
 images
+
+node_modules

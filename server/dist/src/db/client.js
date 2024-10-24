@@ -7,7 +7,7 @@ const DB_URL = process.env.DB_URL;
 if (!DB_URL) {
     throw new Error("DB_URI is not set, please set it in .env file.");
 }
-const connection = await mysql.createConnection({
+const connection = mysql.createPool({
     uri: DB_URL,
 });
 export const db = drizzle(connection, {

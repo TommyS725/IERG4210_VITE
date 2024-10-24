@@ -7,55 +7,28 @@ services:
        - ./server/images:/usr/share/nginx/html/images
     ports:
       - 3000:80
-    depends_on:
-      server:
-        condition: service_healthy
     restart: on-failure
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.compose
-    volumes:
-      - client:/app/dist
-
-  admin:
-    build:
-      context: ./admin
-      dockerfile: Dockerfile.compose
-    volumes:
-      - admin:/app/dist
-
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-      args:
-        DB_URL: mysql://root:admin@db:3306/store
-        REDIS_HOST: redis
-    command: npm run setup:start
+  app:
+    image: app
+    command: npm run start
     environment:
       DB_URL: mysql://root:admin@db:3306/store
       REDIS_HOST: redis
       REQ_SSL: 'false'
     volumes:
       - ./server/images:/app/images
-      - client:/app/client
-      - admin:/app/admin
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-      frontend:
-        condition: service_completed_successfully
-      admin:
-        condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "curl" ,"localhost:8080"]
-      interval: 10s
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1
+      interval: 5m
       timeout: 10s
-      retries: 5
+      retries: 3
+      start_period: 5s
     restart: on-failure
 
 
@@ -82,8 +55,5 @@ services:
       retries: 3
     restart: on-failure
 
-volumes:
-  client:
-  admin:
 
 

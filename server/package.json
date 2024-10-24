@@ -36,5 +36,8 @@
     "concurrently": "^8.2.2",
     "drizzle-kit": "^0.24.2",
     "tsx": "^3.14.0"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
