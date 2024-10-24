@@ -14,7 +14,7 @@ const TopHeader:FC =()=>{
     return(
         <header className=" min-w-max bg-blue-950  flex p-3 sticky top-0  justify-between shadow-lg pr-10">
             <Link to="/" className=" font-bold font-mono text-xl text-white hover:underline underline-offset-4 p-2 rounded-xl  ">
-                Shopping.com
+                Shopping Demo
             </Link>
             <div className=" items-end flex flex-wrap space-x-3">
             {   
