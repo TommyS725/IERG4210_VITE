@@ -33,8 +33,6 @@ FROM node:20 as build_backend
 WORKDIR /app
 
 
-
-
 COPY server/package.json ./
 
 RUN npm install 
@@ -46,6 +44,7 @@ RUN npm run build
 # Run
 FROM node:20-alpine
 
+LABEL org.opencontainers.image.source https://github.com/TommyS725/IERG4210_VITE
 
 WORKDIR /app
 

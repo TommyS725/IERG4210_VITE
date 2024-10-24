@@ -10,7 +10,7 @@ services:
     restart: on-failure
 
   app:
-    image: app
+    image: ghcr.io/tommys725/ierg4210-shop:latest
     command: npm run start
     environment:
       DB_URL: mysql://root:admin@db:3306/store

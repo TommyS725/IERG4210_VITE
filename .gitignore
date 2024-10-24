@@ -23,3 +23,5 @@ archive.*
 
 # action secrets
 .secrets
+
+.env
