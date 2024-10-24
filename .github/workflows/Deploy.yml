@@ -33,6 +33,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr/${{ github.actor }}/shop-demo:latest
+          tags: ghcr/tommys725/shop-demo:latest
           build-args: |
             PAYPAL_CLIENT_ID=${{ secrets.PAYPAL_CLIENT_ID }}
