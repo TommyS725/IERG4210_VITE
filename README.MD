@@ -16,6 +16,8 @@ This application can be accessed at <https://shop-demo.tommyshum.com/>
 - Email: sb-lgoet30236865@personal.example.com
 - Password: Y.1.sWw5
 
+### Auto Deploy
+This repo uses Github actions to deploy updated Docker image to <ghcr.io>. Remote server will auto update the container using watchtower.
 
 ### Before you start
 To use the PayPal function in frontend,you have to sign up for a PayPal developer account at <https://developer.paypal.com/dashboard/accounts> and set it as the enviornment of frontend as described [here](/frontend/README.md#enviornment-set-up).
@@ -143,21 +145,30 @@ depends_on:
 restart: on-failure
 ...
 ```
-2. If you are using HTTPS to serve, set `IS_DEV` in server section to `false`, if not set to `true`.
+2. If you are using HTTPS to serve, set `REQ_SSL` in server section to `false`, if not set to `true`.
 ```yml
 ...
- server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-      args:
-        DB_URL: mysql://root:admin@db:3306/store
-        REDIS_HOST: redis
-    command: npm run setup:start
+app:
+    image: ghcr.io/tommys725/ierg4210-shop:latest
+    command: npm run start
     environment:
       DB_URL: mysql://root:admin@db:3306/store
       REDIS_HOST: redis
-      IS_DEV: 'false if using HTTPS else true'
+      REQ_SSL: 'false'
+    volumes:
+      - ./server/images:/app/images
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/healthz || exit 1
+      interval: 5m
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    restart: on-failure
 ...
 ```
 3. Start the server by running
@@ -187,8 +198,6 @@ server {
 }
 ```
 
-### Auto Deploy
-This repo uses Github actions to deploy updated builds by `scp` and `ssh`.
 
 ### User Creation
 You can refer to this [section](./server/README.md#user-creation)
