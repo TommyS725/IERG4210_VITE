@@ -31,7 +31,7 @@ export const checkCsrf = createMiddleware(async (c, next) => {
 });
 
 export const checkAdminAuthToken = createMiddleware(async (c, next) => {
-  console.log("admin auth token check on", c.req.path);
+  // console.log("admin auth token check on", c.req.path);
   const session = await Session.getSession(c);
   const token = Cookies.getAuthCookie(c);
   if (!session) return ClientError.unauthorized(c);
@@ -58,15 +58,15 @@ export const checkAdminAuthToken = createMiddleware(async (c, next) => {
     Cookies.deleteAuthCookie(c);
     return ClientError.unauthorized(c);
   }
-  console.log("admin auth token check passed", c.req.path);
+  // console.log("admin auth token check passed", c.req.path);
   await next();
 });
 
 export const requireAdmin = createMiddleware(async (c, next) => {
-  console.log("admin check on", c.req.path);
+  // console.log("admin check on", c.req.path);
   const session = await Session.getSession(c);
   if (!session || !session.admin) return c.redirect("/login");
-  console.log("admin check passed", c.req.path);
+  // console.log("admin check passed", c.req.path);
   await next();
 });
 
@@ -92,7 +92,7 @@ export const requireSecure = createMiddleware(async (c, next) => {
 
 
 export const checkAuthToken = createMiddleware(async (c, next) => {
-  console.log("auth token check on", c.req.path);
+  // console.log("auth token check on", c.req.path);
   const session = await Session.getSession(c);
   const token = Cookies.getAuthCookie(c);
   if (!session) return ClientError.unauthorized(c);
@@ -117,6 +117,6 @@ export const checkAuthToken = createMiddleware(async (c, next) => {
     Cookies.deleteAuthCookie(c);
     return ClientError.unauthorized(c);
   }
-  console.log("auth token check passed", c.req.path);
+  // console.log("auth token check passed", c.req.path);
   await next();
 })
