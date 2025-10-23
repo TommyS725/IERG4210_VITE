@@ -6,7 +6,7 @@
 This application is a shopping website built using React, Vue and Hono with TypeScript.
 
 ### Demo
-This application can be accessed at <https://shop-demo.tommyshum.com/>
+~~This application can be accessed at <https://shop-demo.tommyshum.com/>~~
 
 ##### Demo User Account (for login):
 - Email: demo@tommyshum.com
